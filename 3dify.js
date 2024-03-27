@@ -1,83 +1,95 @@
 (function () {
   const MAX_ROTATION = 180;
-  const DEPTH_INCREMENT = 20;
+  const DEPTH_INCREMENT = 25;
   const PERSPECTIVE = 1000;
-  const Z_INCREMENT_SCALE = 0.001;
-  const SIDE_FACE_CLASS = 'side-face'; // Unique class for side faces
+  const SIDE_FACE_CLASS = 'side-face';
+  const MAX_DOM_DEPTH = getMaxDepth(document.body);
 
-  function getColorByDepth(depthLevel) {
-    // Adjusted function to calculate color based on depthLevel
-    // Lightness increases with depthLevel to make higher elements lighter
-    const lightness = Math.min(20 + depthLevel, 80); // Ensure lightness is between 20 and 100
-    return `hsl(240, 100%, ${lightness}%)`; // Blue color with varying lightness
+  // Calculate color based on depth, ensuring lighter colors for deeper elements
+  function getColorByDepth(depth) {
+    return `hsl(190, 75%, ${Math.min(10 + depth * (1 + 60 / MAX_DOM_DEPTH), 90)}%)`;
   }
 
+  // Calculate the maximum depth of the DOM tree
+  function getMaxDepth(element) {
+    return Array.from(element.children).reduce((max, child) =>
+      Math.max(max, getMaxDepth(child)), 0) + 1;
+  }
+
+  // Freate side faces for an element to give it a 3D appearance
   function createSideFaces(element, depthLevel) {
-    const depth = DEPTH_INCREMENT;
     const width = element.offsetWidth;
     const height = element.offsetHeight;
     const color = getColorByDepth(depthLevel);
 
-    // Side faces positions and transformations
     const faces = [
-      `rotateY(90deg) translateZ(${width / 2}px) translateX(${width / 2}px)`,
-      `rotateY(-90deg) translateZ(${width / 2}px) translateX(-${width / 2}px)`,
-      `rotateX(90deg) translateZ(${height / 2}px) translateY(-${height / 2}px)`,
-      `rotateX(-90deg) translateZ(${height / 2}px) translateY(${height / 2}px)`
+      {
+        transform: `translateX(${width}px) rotateY(90deg)`,
+        width: DEPTH_INCREMENT,
+        height: height
+      },
+      {
+        transform: `translateX(-${DEPTH_INCREMENT}px) rotateY(-90deg)`,
+        width: DEPTH_INCREMENT,
+        height: height
+      },
+      {
+        transform: `translateY(-${DEPTH_INCREMENT}px) rotateX(90deg)`,
+        width: width,
+        height: DEPTH_INCREMENT
+      },
+      {
+        transform: `translateY(${height}px) rotateX(-90deg)`,
+        width: width,
+        height: DEPTH_INCREMENT
+      }
     ];
 
-    faces.forEach(transform => {
+    // Create a face for each side of the element
+    faces.forEach(({ transform, width, height }) => {
       const face = document.createElement('div');
-      face.className = SIDE_FACE_CLASS; // Assign the unique class
-      face.style.transformStyle = "preserve-3d";
-      face.style.position = 'absolute';
-      face.style.width = `${width}px`;
-      face.style.height = `${height}px`;
-      face.style.background = color; // Use color based on depthLevel
-      face.style.transform = transform;
-      face.style.overflow = 'hidden';
-      face.style.backfaceVisibility = 'hidden'; // Hide back face
+      face.className = SIDE_FACE_CLASS;
+      Object.assign(face.style, {
+        transformStyle: "preserve-3d",
+        position: 'absolute',
+        width: `${width}px`,
+        height: `${height}px`,
+        background: color,
+        transform: transform,
+        overflow: 'hidden',
+        backfaceVisibility: 'hidden',
+        willChange: 'transform',
+        zIndex: `${depthLevel}`
+      })
       element.appendChild(face);
     });
   }
 
-  function getEffectiveBackgroundColor(element) {
-    let color = 'rgba(0, 0, 0, 0)'; // Default to fully transparent
-    let currentElement = element;
-
-    while (currentElement) {
-      const style = window.getComputedStyle(currentElement);
-      const backgroundColor = style.backgroundColor;
-      // Check if the color is not transparent
-      if (backgroundColor !== 'rgba(0, 0, 0, 0)' && backgroundColor !== 'transparent') {
-        color = backgroundColor;
-        break;
-      }
-      currentElement = currentElement.parentElement;
-    }
-
-    return color;
-  }
-
+  // Recursive function to traverse child nodes, apply 3D styles, and create side faces
   function traverseChildren(parentNode, depthLevel, offsetX, offsetY) {
     for (let children = parentNode.childNodes, childrenCount = children.length, i = 0; i < childrenCount; i++) {
       const childNode = children[i];
-      if (1 === childNode.nodeType && !childNode.classList.contains(SIDE_FACE_CLASS)) { // Skip side faces
-        childNode.style.position = 'relative';
-        childNode.style.backfaceVisibility = 'hidden';
-        childNode.style.overflow = "visible";
-        childNode.style.transformStyle = "preserve-3d";
-        childNode.style.transform = `translateZ(${DEPTH_INCREMENT + (childrenCount - offsetY) * Z_INCREMENT_SCALE}px)`;
-        // Color face, maybe temp, need everything solid...
-        childNode.style.backgroundColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+      if (1 === childNode.nodeType && !childNode.classList.contains(SIDE_FACE_CLASS)) {
+        Object.assign(childNode.style, {
+          transform: `translateZ(${DEPTH_INCREMENT}px)`,
+          position: 'relative',
+          backfaceVisibility: 'hidden',
+          overflow: "visible",
+          transformStyle: "preserve-3d",
+          zIndex: `${depthLevel}`,
+          backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // Random color face while debugging
+          willChange: 'transform',
+        });
+
 
         childNode.offsetParent === parentNode && (offsetX += parentNode.offsetLeft, offsetY += parentNode.offsetTop);
-        createSideFaces(childNode, depthLevel); // Add side faces to this element
+        createSideFaces(childNode, depthLevel);
         traverseChildren(childNode, depthLevel + 1, offsetX, offsetY);
       }
     }
   }
 
+  // Apply initial styles to the body to enable 3D perspective
   const body = document.body;
   body.style.overflow = "visible";
   body.style.transformStyle = "preserve-3d";
@@ -88,6 +100,7 @@
   body.style.perspectiveOrigin = body.style.transformOrigin = `${perspectiveOriginX}px ${perspectiveOriginY}px`;
   traverseChildren(body, 0, 0, 0);
 
+  // Event listener to rotate the DOM based on mouse movement
   document.addEventListener("mousemove", (event) => {
     const rotationY = (MAX_ROTATION * (1 - event.screenY / screen.height) - (MAX_ROTATION / 2));
     const rotationX = (MAX_ROTATION * event.screenX / screen.width - (MAX_ROTATION / 2));
