@@ -1,7 +1,8 @@
 // 3D Dom viewer, copy-paste into console to visualise the DOM as a stack of solid blocks
 (() => {
   const getDOMDepth = element => [...element.children].reduce((max, child) => Math.max(max, getDOMDepth(child)), 0) + 1;
-  const getColorByDepth = (depth, hue = 0, lighten = 0, opacity = 1) => `hsla(${hue}, 75%, ${Math.min(10 + depth * (1 + 60 / getDOMDepth(document.body)), 90) + lighten}%,${opacity})`;
+  const domDepthCache = getDOMDepth(document.body);
+  const getColorByDepth = (depth, hue = 0, lighten = 0, opacity = 1) => `hsla(${hue}, 75%, ${Math.min(10 + depth * (1 + 60 / domDepthCache), 90) + lighten}%,${opacity})`;
 
   // Config
   const COLOR_SURFACES = true;
@@ -18,6 +19,8 @@
     const width = element.offsetWidth;
     const height = element.offsetHeight;
     const color = getColorByDepth(depthLevel, 190, -5, COLOR_OPACITY);
+    const fragment = document.createDocumentFragment();
+
 
     // Helper function to create and style a face
     function createFace({ width, height, transform, transformOrigin, top, left, right, bottom }) {
@@ -38,7 +41,7 @@
         right,
         bottom
       });
-      element.appendChild(face);
+      fragment.appendChild(face);
     }
 
     // Top face
@@ -80,32 +83,33 @@
       top: '0px',
       left: '0px'
     });
+
+    element.appendChild(fragment);
   }
 
   // Recursive function to traverse child nodes, apply 3D styles, and create side faces
   function traverseDOM(parentNode, depthLevel, offsetX, offsetY) {
     for (let children = parentNode.childNodes, childrenCount = children.length, i = 0; i < childrenCount; i++) {
       const childNode = children[i];
-      if (1 === childNode.nodeType && !childNode.classList.contains(SIDE_FACE_CLASS)) {
+      if (!(1 === childNode.nodeType && !childNode.classList.contains(SIDE_FACE_CLASS))) continue;
+      console.log(childNode);
+      Object.assign(childNode.style, {
+        transform: `translateZ(${DEPTH_INCREMENT}px)`,
+        overflow: "visible",
+        transformStyle: "preserve-3d",
+        backgroundColor: COLOR_SURFACES ? getColorByDepth(depthLevel, COLOR_HUE, 0, COLOR_OPACITY) : 'transparent',
+        willChange: 'transform',
+      });
 
-        Object.assign(childNode.style, {
-          transform: `translateZ(${DEPTH_INCREMENT}px)`,
-          overflow: "visible",
-          transformStyle: "preserve-3d",
-          backgroundColor: COLOR_SURFACES ? getColorByDepth(depthLevel, COLOR_HUE, 0, COLOR_OPACITY) : 'transparent',
-          willChange: 'transform',
-        });
 
-
-        let updatedOffsetX = offsetX;
-        let updatedOffsetY = offsetY;
-        if (childNode.offsetParent === parentNode) {
-          updatedOffsetX += parentNode.offsetLeft;
-          updatedOffsetY += parentNode.offsetTop;
-        }
-        createSideFaces(childNode, depthLevel);
-        traverseDOM(childNode, depthLevel + 1, updatedOffsetX, updatedOffsetY);
+      let updatedOffsetX = offsetX;
+      let updatedOffsetY = offsetY;
+      if (childNode.offsetParent === parentNode) {
+        updatedOffsetX += parentNode.offsetLeft;
+        updatedOffsetY += parentNode.offsetTop;
       }
+      createSideFaces(childNode, depthLevel);
+      traverseDOM(childNode, depthLevel + 1, updatedOffsetX, updatedOffsetY);
     }
   }
 
