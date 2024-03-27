@@ -1,64 +1,66 @@
-// const getRandomColor = { init() { import('./utils.js').then((exports) => { this.b = exports['a'] }) } }
-// import { getRandomColor } from "./utils.js";
-
 let enabled = false;
 
-// state for context menu options
+// browser extension state
 let showSides = false;
 let colorSurfaces = true;
 let colorRandom = false;
-
+let zoomEnabled = false;
 
 // Set enabled to false when the tab is updated
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete') {
-    enabled = false;
-  }
+  if (changeInfo.status === 'complete') enabled = false;
 });
 
-browser.contextMenus.create({
-  id: "toggle-show-sides",
-  title: "Show Sides",
-  type: "checkbox",
-  checked: showSides,
-  contexts: ["action"],
-});
+// Create context menu items for user preferences
+const options = [
+  {
+    id: "toggle-show-sides",
+    title: "Show Sides",
+    type: "checkbox",
+    checked: showSides,
+    contexts: ["action"],
+  },
+  {
+    id: "toggle-color-surfaces",
+    title: "Color Top Surfaces",
+    type: "checkbox",
+    checked: colorSurfaces,
+    contexts: ["action"],
+  },
+  {
+    id: "toggle-color-random",
+    title: "Random Color",
+    type: "checkbox",
+    checked: colorRandom,
+    contexts: ["action"],
+  },
+  {
+    id: "toggle-zoom",
+    title: "Zoom",
+    type: "checkbox",
+    checked: zoomEnabled,
+    contexts: ["action"],
+  }];
 
-browser.contextMenus.create({
-  id: "toggle-color-surfaces",
-  title: "Color Top Surfaces",
-  type: "checkbox",
-  checked: colorSurfaces,
-  contexts: ["action"],
-});
-
-browser.contextMenus.create({
-  id: "toggle-color-random",
-  title: "Random Color",
-  type: "checkbox",
-  checked: colorRandom,
-  contexts: ["action"],
-});
+for (const opt of options) {
+  browser.contextMenus.create(opt);
+}
 
 browser.contextMenus.onClicked.addListener((info, tab) => {
-  switch (info.menuItemId) {
-    case "toggle-show-sides":
-      showSides = !showSides;
-      browser.contextMenus.update(info.menuItemId, { checked: showSides });
-      break;
-    case "toggle-color-surfaces":
-      colorSurfaces = !colorSurfaces;
-      browser.contextMenus.update(info.menuItemId, { checked: colorSurfaces });
-      break;
-    case "toggle-color-random":
-      colorRandom = !colorRandom;
-      browser.contextMenus.update(info.menuItemId, { checked: colorRandom });
-      break;
-    // Handle other menu items similarly...
+  const optionMappings = {
+    "toggle-show-sides": () => showSides = !showSides,
+    "toggle-color-surfaces": () => colorSurfaces = !colorSurfaces,
+    "toggle-color-random": () => colorRandom = !colorRandom,
+    "toggle-zoom": () => zoomEnabled = !zoomEnabled,
+  };
+
+  if (optionMappings.hasOwnProperty(info.menuItemId)) {
+    const newState = optionMappings[info.menuItemId](); // Toggle the state
+    browser.contextMenus.update(info.menuItemId, { checked: newState });
   }
 });
 
-
+// Handle enabling/disabling the extension
 browser.action.onClicked.addListener(async (tab) => {
   if (enabled) {
     enabled = false
@@ -71,7 +73,7 @@ browser.action.onClicked.addListener(async (tab) => {
         tabId: tab.id,
       },
       func: dom3d,
-      args: [showSides, colorSurfaces, colorRandom]
+      args: [showSides, colorSurfaces, colorRandom, zoomEnabled]
     });
     enabled = true;
   } catch (err) {
@@ -79,12 +81,13 @@ browser.action.onClicked.addListener(async (tab) => {
   }
 });
 
-function dom3d(SHOW_SIDES, COLOR_SURFACE, COLOR_RANDOM) {
+// Main function invoked on browser action click
+function dom3d(SHOW_SIDES, COLOR_SURFACE, COLOR_RANDOM, ZOOM_ENABLED) {
   const COLOR_HUE = 190; // hue in HSL (https://hslpicker.com)
   const MAX_ROTATION = 180; // set to 360 to rotate all the way round
   const THICKNESS = 20; // thickness of layers
 
-  let PERSPECTIVE = 10000; // ¯\\_(ツ)_/¯
+  let PERSPECTIVE = 10000; // akin to FOV
   let rotationX = 0;
   let rotationY = 0;
   let _ZOOM = 10000;
@@ -118,6 +121,7 @@ function dom3d(SHOW_SIDES, COLOR_SURFACE, COLOR_RANDOM) {
   });
 
   document.addEventListener("wheel", (event) => {
+    if (!ZOOM_ENABLED) return;
     event.preventDefault();
     // Adjust zoom level based on the scroll direction
     ZOOM += event.deltaY * 2; // Adjust the multiplier (-2) to control the zoom speed
