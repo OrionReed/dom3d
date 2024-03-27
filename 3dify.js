@@ -1,14 +1,14 @@
 // 3D Dom viewer, copy-paste into console to visualise the DOM as a stack of solid blocks
 (() => {
   const MAX_ROTATION = 180;
-  const DEPTH_INCREMENT = 100;
+  const DEPTH_INCREMENT = 50;
   const PERSPECTIVE = 1000;
   const SIDE_FACE_CLASS = 'side-face';
   const MAX_DOM_DEPTH = getMaxDepth(document.body);
 
   // Calculate color based on depth, ensuring lighter colors for deeper elements
-  function getColorByDepth(depth, hue = 0) {
-    return `hsl(${hue}, 75%, ${Math.min(10 + depth * (1 + 60 / MAX_DOM_DEPTH), 90)}%)`;
+  function getColorByDepth(depth, hue = 0, lighten = 0) {
+    return `hsl(${hue}, 75%, ${Math.min(10 + depth * (1 + 60 / MAX_DOM_DEPTH), 90) + lighten}%)`;
   }
 
   // Function to create a random low saturation color
@@ -30,7 +30,7 @@
   // Freate side faces for an element to give it a 3D appearance
   function createSideFaces(element, depthLevel) {
     const width = element.offsetWidth;
-    const color = getColorByDepth(depthLevel);
+    const color = getColorByDepth(depthLevel, 190, -5);
 
     // Creating only the top face
     const topFace = document.createElement('div');
@@ -82,7 +82,7 @@
         console.log('child', childNode, depthLevel);
         Object.assign(childNode.style, {
           transform: `translateZ(${DEPTH_INCREMENT}px)`,
-          position: 'absolute',
+          // position: 'relatibe',
           // backfaceVisibility: 'hidden',
           overflow: "visible",
           opacity: "1 !important",
