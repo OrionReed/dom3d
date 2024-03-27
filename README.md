@@ -9,7 +9,13 @@ From your browser, enable developer mode (or equivelant) and install the extensi
 1. Go to `about:debugging#/runtime/this-firefox`
 2. Click "Load Temporary Addon"
 3. Select `dom3d/dist/firefox/manifest.json`
-4. Extension should now be installed, you can find it in the top right extensions menu (pizzle piece icon) and pin it if desired
+4. Extension should now be installed, you can find it in the top right extensions menu (puzzle piece icon) and pin it if desired
+
+**In Chrome**
+1. Go to `chrome://extensions`
+2. Click "Load Unpacked"
+3. Select `dom3d/dist/chrome/manifest.json`
+4. Extension should now be installed, you can find it in the top right extensions menu (puzzle piece icon) and pin it if desired
 
 ## Usage
 - Click extension icon to toggle 3D DOM view
