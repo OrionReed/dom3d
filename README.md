@@ -5,7 +5,7 @@ A 3D DOM viewer for Firefox, Chrome, and Safari
 ## Install
 From your browser, enable developer mode (or equivelant) and install the extension from the `dist` folder.
 
-### In Firefox
+**In Firefox**
 1. Go to `about:debugging#/runtime/this-firefox`
 2. Click "Load Temporary Addon"
 3. Select `dom3d/dist/firefox/manifest.json`
