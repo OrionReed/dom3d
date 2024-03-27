@@ -9,9 +9,7 @@
     "contextMenus"
   ],
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+    "service-worker": "background.js"
   },
   "content_scripts": [
     {
@@ -25,8 +23,7 @@
   ],
   "action": {
     "default_icon": {
-      "48": "assets/dom3d-48.png",
-      "96": "assets/dom3d-96.png"
+      "128": "assets/dom3d-128.png"
     }
   }
 }
