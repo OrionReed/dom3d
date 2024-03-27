@@ -32,14 +32,14 @@
   traverseDOM(body, 0, 0, 0);
 
   document.addEventListener("mousemove", (event) => {
-    const rotationY = (MAX_ROTATION * (1 - event.screenY / screen.height) - (MAX_ROTATION / 2));
-    const rotationX = (MAX_ROTATION * event.screenX / screen.width - (MAX_ROTATION / 2));
+    const rotationY = (MAX_ROTATION * (1 - event.clientY / window.innerHeight) - (MAX_ROTATION / 2));
+    const rotationX = (MAX_ROTATION * event.clientX / window.innerWidth - (MAX_ROTATION / 2));
     body.style.transform = `rotateX(${rotationY}deg) rotateY(${rotationX}deg)`;
   });
 
   // Create side faces for an element to give it a 3D appearance
   function createSideFaces(element, color) {
-    if (!SHOW_SIDES) return
+    if (!SHOW_SIDES) { return }
     const width = element.offsetWidth;
     const height = element.offsetHeight;
     const fragment = document.createDocumentFragment();
@@ -115,7 +115,7 @@
     for (let children = parentNode.childNodes, childrenCount = children.length, i = 0; i < childrenCount; i++) {
       const childNode = children[i];
       if (!(1 === childNode.nodeType && !childNode.classList.contains('dom-3d-side-face'))) continue;
-      const color = COLOR_RANDOM ? getRandomColor() : getColorByDepth(depthLevel, 190, -5);
+      const color = COLOR_RANDOM ? getRandomColor() : getColorByDepth(depthLevel, COLOR_HUE, -5);
       Object.assign(childNode.style, {
         transform: `translateZ(${THICKNESS}px)`,
         overflow: "visible",
