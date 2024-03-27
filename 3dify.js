@@ -1,18 +1,19 @@
-// 3D Dom viewer, copy-paste into console to visualise the DOM as a stack of solid blocks
+// 3D Dom viewer, copy-paste this into your console to visualise the DOM as a stack of solid blocks.
+// You can also minify and save it as a bookmarklet (https://www.freecodecamp.org/news/what-are-bookmarklets/)
 (() => {
   const getDOMDepth = element => [...element.children].reduce((max, child) => Math.max(max, getDOMDepth(child)), 0) + 1;
   const domDepthCache = getDOMDepth(document.body);
   const getColorByDepth = (depth, hue = 0, lighten = 0, opacity = 1) => `hsla(${hue}, 75%, ${Math.min(10 + depth * (1 + 60 / domDepthCache), 90) + lighten}%,${opacity})`;
 
   // Config
-  const COLOR_SURFACES = true;
-  const COLOR_SIDES = true;
-  const COLOR_HUE = 190;
+  const SHOW_SIDES = true; // color sides of DOM elements?
+  const COLOR_TOP_SURFACE = true; // color tops of towers?
+  const COLOR_HUE = 190; // hue in HSL (https://hslpicker.com)
   const COLOR_OPACITY = 1;
-  const MAX_ROTATION = 180;
-  const DEPTH_INCREMENT = 30;
-  const PERSPECTIVE = 1000;
-  const SIDE_FACE_CLASS = 'side-face';
+  const MAX_ROTATION = 180; // set to 360 to rotate all the way round
+  const DEPTH_INCREMENT = 30; // height/depth of layers
+  const PERSPECTIVE = 1000; // ¯\\_(ツ)_/¯
+  const SIDE_FACE_CLASS = 'side-face'; // we use this to avoid traversing infinitely
 
   // Apply initial styles to the body to enable 3D perspective
   const body = document.body;
@@ -24,7 +25,6 @@
   body.style.perspectiveOrigin = body.style.transformOrigin = `${perspectiveOriginX}px ${perspectiveOriginY}px`;
   traverseDOM(body, 0, 0, 0);
 
-  // Event listener to rotate the DOM based on mouse movement
   document.addEventListener("mousemove", (event) => {
     const rotationY = (MAX_ROTATION * (1 - event.screenY / screen.height) - (MAX_ROTATION / 2));
     const rotationX = (MAX_ROTATION * event.screenX / screen.width - (MAX_ROTATION / 2));
@@ -33,6 +33,7 @@
 
   // Create side faces for an element to give it a 3D appearance
   function createSideFaces(element, depthLevel) {
+    if (!SHOW_SIDES) return
     const width = element.offsetWidth;
     const height = element.offsetHeight;
     const color = getColorByDepth(depthLevel, 190, -5, COLOR_OPACITY);
@@ -44,6 +45,7 @@
       face.className = SIDE_FACE_CLASS;
       Object.assign(face.style, {
         transformStyle: "preserve-3d",
+        backfaceVisibility: 'hidden',
         position: 'absolute',
         width: `${width}px`,
         height: `${height}px`,
@@ -64,10 +66,10 @@
     createFace({
       width,
       height: DEPTH_INCREMENT,
-      transform: 'rotateX(-90deg)',
+      transform: `rotateX(-270deg) translateY(${-DEPTH_INCREMENT}px)`,
       transformOrigin: 'top',
       top: '0px',
-      left: '0px'
+      left: '0px',
     });
 
     // Right face
@@ -84,7 +86,7 @@
     createFace({
       width,
       height: DEPTH_INCREMENT,
-      transform: 'rotateX(90deg)',
+      transform: `rotateX(-90deg) translateY(${DEPTH_INCREMENT}px)`,
       transformOrigin: 'bottom',
       bottom: '0px',
       left: '0px'
@@ -111,8 +113,9 @@
       Object.assign(childNode.style, {
         transform: `translateZ(${DEPTH_INCREMENT}px)`,
         overflow: "visible",
+        backfaceVisibility: "hidden",
         transformStyle: "preserve-3d",
-        backgroundColor: COLOR_SURFACES ? getColorByDepth(depthLevel, COLOR_HUE, 0, COLOR_OPACITY) : 'transparent',
+        backgroundColor: COLOR_TOP_SURFACE ? getColorByDepth(depthLevel, COLOR_HUE, 0, COLOR_OPACITY) : 'transparent',
         willChange: 'transform',
       });
 
