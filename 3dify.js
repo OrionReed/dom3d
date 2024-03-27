@@ -1,13 +1,24 @@
-(function () {
+// 3D Dom viewer, copy-paste into console to visualise the DOM as a stack of solid blocks
+(() => {
   const MAX_ROTATION = 180;
-  const DEPTH_INCREMENT = 25;
+  const DEPTH_INCREMENT = 100;
   const PERSPECTIVE = 1000;
   const SIDE_FACE_CLASS = 'side-face';
   const MAX_DOM_DEPTH = getMaxDepth(document.body);
 
   // Calculate color based on depth, ensuring lighter colors for deeper elements
-  function getColorByDepth(depth) {
-    return `hsl(190, 75%, ${Math.min(10 + depth * (1 + 60 / MAX_DOM_DEPTH), 90)}%)`;
+  function getColorByDepth(depth, hue = 0) {
+    return `hsl(${hue}, 75%, ${Math.min(10 + depth * (1 + 60 / MAX_DOM_DEPTH), 90)}%)`;
+  }
+
+  // Function to create a random low saturation color
+  function getRandomColor() {
+    const startHue = 100; // Starting hue at 0
+    const endHue = 300; // Ending hue at 360
+    const hue = startHue + Math.floor(Math.random() * (endHue - startHue)); // Random hue within the range
+    const saturation = 40 + Math.floor(Math.random() * 30); // Low saturation between 10% to 30%
+    const lightness = 60 + Math.floor(Math.random() * 20); // Lightness between 50% to 70%
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   }
 
   // Calculate the maximum depth of the DOM tree
@@ -19,50 +30,48 @@
   // Freate side faces for an element to give it a 3D appearance
   function createSideFaces(element, depthLevel) {
     const width = element.offsetWidth;
-    const height = element.offsetHeight;
     const color = getColorByDepth(depthLevel);
 
-    const faces = [
-      {
-        transform: `translateX(${width}px) rotateY(90deg)`,
-        width: DEPTH_INCREMENT,
-        height: height
-      },
-      {
-        transform: `translateX(-${DEPTH_INCREMENT}px) rotateY(-90deg)`,
-        width: DEPTH_INCREMENT,
-        height: height
-      },
-      {
-        transform: `translateY(-${DEPTH_INCREMENT}px) rotateX(90deg)`,
-        width: width,
-        height: DEPTH_INCREMENT
-      },
-      {
-        transform: `translateY(${height}px) rotateX(-90deg)`,
-        width: width,
-        height: DEPTH_INCREMENT
-      }
-    ];
-
-    // Create a face for each side of the element
-    faces.forEach(({ transform, width, height }) => {
-      const face = document.createElement('div');
-      face.className = SIDE_FACE_CLASS;
-      Object.assign(face.style, {
-        transformStyle: "preserve-3d",
-        position: 'absolute',
-        width: `${width}px`,
-        height: `${height}px`,
-        background: color,
-        transform: transform,
-        overflow: 'hidden',
-        backfaceVisibility: 'hidden',
-        willChange: 'transform',
-        zIndex: `${depthLevel}`
-      })
-      element.appendChild(face);
+    // Creating only the top face
+    const topFace = document.createElement('div');
+    topFace.className = SIDE_FACE_CLASS;
+    Object.assign(topFace.style, {
+      transformStyle: "preserve-3d",
+      position: 'absolute',
+      width: `${width}px`,
+      height: `${DEPTH_INCREMENT}px`, // Height is the DEPTH_INCREMENT for thickness
+      background: color,
+      // Correcting the transform to rotate around the bottom edge
+      transform: 'rotateX(-90deg)',
+      transformOrigin: 'top',
+      overflow: 'hidden',
+      willChange: 'transform',
+      top: '0px', // Aligning exactly at the top edge
+      left: '0px', // Ensure it aligns to the left edge
     });
+
+    element.appendChild(topFace);
+  }
+
+  function adjustPositionAndPreserveLayout(element) {
+    // Calculate original position
+    const originalOffsetTop = element.offsetTop;
+    const originalOffsetLeft = element.offsetLeft;
+
+    // Set position to absolute and move to the calculated position
+    element.style.position = 'absolute';
+    element.style.top = `${originalOffsetTop}px`;
+    element.style.left = `${originalOffsetLeft}px`;
+
+    // Optionally, set width and height explicitly if needed
+    element.style.width = `${element.offsetWidth}px`;
+    element.style.height = `${element.offsetHeight}px`;
+
+    // Insert a placeholder if necessary to maintain document flow
+    const placeholder = document.createElement('div');
+    placeholder.style.width = `${element.offsetWidth}px`;
+    placeholder.style.height = `${element.offsetHeight}px`;
+    element.parentNode.insertBefore(placeholder, element);
   }
 
   // Recursive function to traverse child nodes, apply 3D styles, and create side faces
@@ -70,21 +79,27 @@
     for (let children = parentNode.childNodes, childrenCount = children.length, i = 0; i < childrenCount; i++) {
       const childNode = children[i];
       if (1 === childNode.nodeType && !childNode.classList.contains(SIDE_FACE_CLASS)) {
+        console.log('child', childNode, depthLevel);
         Object.assign(childNode.style, {
           transform: `translateZ(${DEPTH_INCREMENT}px)`,
-          position: 'relative',
-          backfaceVisibility: 'hidden',
+          position: 'absolute',
+          // backfaceVisibility: 'hidden',
           overflow: "visible",
+          opacity: "1 !important",
           transformStyle: "preserve-3d",
-          zIndex: `${depthLevel}`,
-          backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`, // Random color face while debugging
+          backgroundColor: getColorByDepth(depthLevel, 190), // Random color face while debugging
           willChange: 'transform',
         });
 
 
-        childNode.offsetParent === parentNode && (offsetX += parentNode.offsetLeft, offsetY += parentNode.offsetTop);
+        let updatedOffsetX = offsetX;
+        let updatedOffsetY = offsetY;
+        if (childNode.offsetParent === parentNode) {
+          updatedOffsetX += parentNode.offsetLeft;
+          updatedOffsetY += parentNode.offsetTop;
+        }
         createSideFaces(childNode, depthLevel);
-        traverseChildren(childNode, depthLevel + 1, offsetX, offsetY);
+        traverseChildren(childNode, depthLevel + 1, updatedOffsetX, updatedOffsetY);
       }
     }
   }
@@ -92,8 +107,9 @@
   // Apply initial styles to the body to enable 3D perspective
   const body = document.body;
   body.style.overflow = "visible";
+  document.documentElement.style.transformStyle = "preserve-3d";
   body.style.transformStyle = "preserve-3d";
-  body.style.backfaceVisibility = 'hidden';
+  // body.style.backfaceVisibility = 'hidden';
   body.style.perspective = PERSPECTIVE;
   const perspectiveOriginX = (window.innerWidth / 2);
   const perspectiveOriginY = (window.innerHeight / 2);
