@@ -19,83 +19,67 @@
     const height = element.offsetHeight;
     const color = getColorByDepth(depthLevel, 190, -5, COLOR_OPACITY);
 
-    const baseStyle = {
-      transformStyle: "preserve-3d",
-      position: 'absolute',
-      background: color,
-      overflow: 'hidden',
-      willChange: 'transform',
+    // Helper function to create and style a face
+    function createFace({ width, height, transform, transformOrigin, top, left, right, bottom }) {
+      const face = document.createElement('div');
+      face.className = SIDE_FACE_CLASS;
+      Object.assign(face.style, {
+        transformStyle: "preserve-3d",
+        position: 'absolute',
+        width: `${width}px`,
+        height: `${height}px`,
+        background: color,
+        transform,
+        transformOrigin,
+        overflow: 'hidden',
+        willChange: 'transform',
+        top,
+        left,
+        right,
+        bottom
+      });
+      element.appendChild(face);
+    }
+
+    // Top face
+    createFace({
+      width,
+      height: DEPTH_INCREMENT,
+      transform: 'rotateX(-90deg)',
+      transformOrigin: 'top',
       top: '0px',
-      left: '0px',
-      // width: `${width}px`,
-      // height: `${DEPTH_INCREMENT}px`, // Height is the DEPTH_INCREMENT for thickness
-      // transform: 'rotateX(-90deg)',
-      // transformOrigin: 'top',
-    }
+      left: '0px'
+    });
 
-    const faces = [
-      {
-        width: `${width}px`,
-        height: `${DEPTH_INCREMENT}px`, // Height is the DEPTH_INCREMENT for thickness
-        transform: 'rotateX(-90deg)',
-        transformOrigin: 'top',
-        // transformStyle: "preserve-3d",
-        // position: 'absolute',
-        // background: color,
-        // overflow: 'hidden',
-        // willChange: 'transform',
-        // top: '0px', // Aligning exactly at the top edge
-        // left: '0px', // Ensure it aligns to the left edge
-      },
-      {
-        width: `${DEPTH_INCREMENT}px`,
-        height: `${height}px`,
-        transform: `translateX(${DEPTH_INCREMENT}px) rotateY(90deg)`,
-        transformOrigin: 'left',
-        // transformStyle: "preserve-3d",
-        // position: 'absolute',
-        // background: color,
-        // overflow: 'hidden',
-        // willChange: 'transform',
-        // top: '0px',
-        // right: '0px',
-      },
-      {
-        width: `${width}px`,
-        height: `${DEPTH_INCREMENT}px`,
-        transform: 'rotateX(90deg)',
-        transformOrigin: 'bottom',
-        // transformStyle: "preserve-3d",
-        // position: 'absolute',
-        // background: color,
-        // overflow: 'hidden',
-        // willChange: 'transform',
-        // bottom: '0px', // Aligning at the bottom edge of the element
-        // left: '0px',
-      },
-      {
-        width: `${DEPTH_INCREMENT}px`,
-        height: `${height}px`,
-        transform: `translateX(${-DEPTH_INCREMENT}px) rotateY(-90deg)`,
-        transformOrigin: 'right',
-        // transformStyle: "preserve-3d",
-        // position: 'absolute',
-        // background: color,
-        // Position and rotate the left face
-        // overflow: 'hidden',
-        // willChange: 'transform',
-        // top: '0px',
-        // left: '0px',
-      }
-    ];
+    // Right face - Corrected to not translate too far
+    createFace({
+      width: DEPTH_INCREMENT,
+      height,
+      transform: 'rotateY(90deg)', // Removed translateX
+      transformOrigin: 'left',
+      top: '0px',
+      left: `${width}px` // Position it at the right edge
+    });
 
-    for (const face of faces) {
-      const elem = document.createElement('div');
-      elem.className = SIDE_FACE_CLASS;
-      Object.assign(elem.style, baseStyle);
-      Object.assign(elem.style, face);
-      element.appendChild(elem);
-    }
+    // Bottom face
+    createFace({
+      width,
+      height: DEPTH_INCREMENT,
+      transform: 'rotateX(90deg)',
+      transformOrigin: 'bottom',
+      bottom: '0px',
+      left: '0px'
+    });
+
+    // Left face
+    createFace({
+      width: DEPTH_INCREMENT,
+      height,
+      transform: `translateX(${-DEPTH_INCREMENT}px) rotateY(-90deg)`,
+      transformOrigin: 'right',
+      top: '0px',
+      left: '0px'
+    });
   }
 
   // Recursive function to traverse child nodes, apply 3D styles, and create side faces
