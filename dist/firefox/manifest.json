@@ -13,16 +13,6 @@
       "background.js"
     ]
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "css": [
-        "assets/style.css"
-      ]
-    }
-  ],
   "action": {
     "default_icon": {
       "128": "assets/dom3d-128.png"
