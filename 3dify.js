@@ -108,8 +108,6 @@
     for (let children = parentNode.childNodes, childrenCount = children.length, i = 0; i < childrenCount; i++) {
       const childNode = children[i];
       if (!(1 === childNode.nodeType && !childNode.classList.contains(SIDE_FACE_CLASS))) continue;
-      const surface = childNode.nodeName === 'A' || childNode.nodeName === 'I';
-      const inc = surface ? DEPTH_INCREMENT * 2 : DEPTH_INCREMENT
       Object.assign(childNode.style, {
         transform: `translateZ(${DEPTH_INCREMENT}px)`,
         overflow: "visible",
@@ -117,7 +115,6 @@
         backgroundColor: COLOR_SURFACES ? getColorByDepth(depthLevel, COLOR_HUE, 0, COLOR_OPACITY) : 'transparent',
         willChange: 'transform',
       });
-
 
       let updatedOffsetX = offsetX;
       let updatedOffsetY = offsetY;
