@@ -14,16 +14,32 @@
   const PERSPECTIVE = 1000;
   const SIDE_FACE_CLASS = 'side-face';
 
-  // Freate side faces for an element to give it a 3D appearance
+  // Apply initial styles to the body to enable 3D perspective
+  const body = document.body;
+  body.style.overflow = "visible";
+  body.style.transformStyle = "preserve-3d";
+  body.style.perspective = PERSPECTIVE;
+  const perspectiveOriginX = (window.innerWidth / 2);
+  const perspectiveOriginY = (window.innerHeight / 2);
+  body.style.perspectiveOrigin = body.style.transformOrigin = `${perspectiveOriginX}px ${perspectiveOriginY}px`;
+  traverseDOM(body, 0, 0, 0);
+
+  // Event listener to rotate the DOM based on mouse movement
+  document.addEventListener("mousemove", (event) => {
+    const rotationY = (MAX_ROTATION * (1 - event.screenY / screen.height) - (MAX_ROTATION / 2));
+    const rotationX = (MAX_ROTATION * event.screenX / screen.width - (MAX_ROTATION / 2));
+    body.style.transform = `rotateX(${rotationY}deg) rotateY(${rotationX}deg)`;
+  });
+
+  // Create side faces for an element to give it a 3D appearance
   function createSideFaces(element, depthLevel) {
     const width = element.offsetWidth;
     const height = element.offsetHeight;
     const color = getColorByDepth(depthLevel, 190, -5, COLOR_OPACITY);
     const fragment = document.createDocumentFragment();
 
-
     // Helper function to create and style a face
-    function createFace({ width, height, transform, transformOrigin, top, left, right, bottom }) {
+    const createFace = ({ width, height, transform, transformOrigin, top, left, right, bottom }) => {
       const face = document.createElement('div');
       face.className = SIDE_FACE_CLASS;
       Object.assign(face.style, {
@@ -54,14 +70,14 @@
       left: '0px'
     });
 
-    // Right face - Corrected to not translate too far
+    // Right face
     createFace({
       width: DEPTH_INCREMENT,
       height,
-      transform: 'rotateY(90deg)', // Removed translateX
+      transform: 'rotateY(90deg)',
       transformOrigin: 'left',
       top: '0px',
-      left: `${width}px` // Position it at the right edge
+      left: `${width}px`
     });
 
     // Bottom face
@@ -92,7 +108,8 @@
     for (let children = parentNode.childNodes, childrenCount = children.length, i = 0; i < childrenCount; i++) {
       const childNode = children[i];
       if (!(1 === childNode.nodeType && !childNode.classList.contains(SIDE_FACE_CLASS))) continue;
-      console.log(childNode);
+      const surface = childNode.nodeName === 'A' || childNode.nodeName === 'I';
+      const inc = surface ? DEPTH_INCREMENT * 2 : DEPTH_INCREMENT
       Object.assign(childNode.style, {
         transform: `translateZ(${DEPTH_INCREMENT}px)`,
         overflow: "visible",
@@ -112,21 +129,4 @@
       traverseDOM(childNode, depthLevel + 1, updatedOffsetX, updatedOffsetY);
     }
   }
-
-  // Apply initial styles to the body to enable 3D perspective
-  const body = document.body;
-  body.style.overflow = "visible";
-  body.style.transformStyle = "preserve-3d";
-  body.style.perspective = PERSPECTIVE;
-  const perspectiveOriginX = (window.innerWidth / 2);
-  const perspectiveOriginY = (window.innerHeight / 2);
-  body.style.perspectiveOrigin = body.style.transformOrigin = `${perspectiveOriginX}px ${perspectiveOriginY}px`;
-  traverseDOM(body, 0, 0, 0);
-
-  // Event listener to rotate the DOM based on mouse movement
-  document.addEventListener("mousemove", (event) => {
-    const rotationY = (MAX_ROTATION * (1 - event.screenY / screen.height) - (MAX_ROTATION / 2));
-    const rotationX = (MAX_ROTATION * event.screenX / screen.width - (MAX_ROTATION / 2));
-    body.style.transform = `rotateX(${rotationY}deg) rotateY(${rotationX}deg)`;
-  });
 })()
