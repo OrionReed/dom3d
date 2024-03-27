@@ -7,7 +7,7 @@
   const COLOR_HUE = 190; // hue in HSL (https://hslpicker.com)
   const MAX_ROTATION = 180; // set to 360 to rotate all the way round
   const THICKNESS = 20; // thickness of layers
-  const DISTANCE = 50000; // ¯\\_(ツ)_/¯
+  const DISTANCE = 10000; // ¯\\_(ツ)_/¯
 
 
   function getRandomColor() {
@@ -111,13 +111,11 @@
   }
 
   // Recursive function to traverse child nodes, apply 3D styles, and create side faces
-  function traverseDOM(parentNode, depthLevel, offsetX, offsetY, alt = false) {
+  function traverseDOM(parentNode, depthLevel, offsetX, offsetY) {
     for (let children = parentNode.childNodes, childrenCount = children.length, i = 0; i < childrenCount; i++) {
       const childNode = children[i];
       if (!(1 === childNode.nodeType && !childNode.classList.contains('dom-3d-side-face'))) continue;
-      // const hasCol = color ? true : false;
-      const color = alt ? getColorByDepth(depthLevel, 280, -5) : getColorByDepth(depthLevel, 190, -5);
-      if (childNode.classList.contains('MjjYud')) alt = true;
+      const color = COLOR_RANDOM ? getRandomColor() : getColorByDepth(depthLevel, 190, -5);
       Object.assign(childNode.style, {
         transform: `translateZ(${THICKNESS}px)`,
         overflow: "visible",
@@ -134,7 +132,7 @@
         updatedOffsetY += parentNode.offsetTop;
       }
       createSideFaces(childNode, color);
-      traverseDOM(childNode, depthLevel + 1, updatedOffsetX, updatedOffsetY, alt);
+      traverseDOM(childNode, depthLevel + 1, updatedOffsetX, updatedOffsetY);
     }
   }
 })()
