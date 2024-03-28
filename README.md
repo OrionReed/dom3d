@@ -14,7 +14,7 @@ From your browser, enable developer mode (or equivelant) and install the extensi
 **In Chrome**
 1. Go to `chrome://extensions`
 2. Click "Load Unpacked"
-3. Select `dom3d/dist/chrome/manifest.json`
+3. Select the folder `dom3d/dist/chrome/`
 4. Extension should now be installed, you can find it in the top right extensions menu (puzzle piece icon) and pin it if desired
 
 ## Usage

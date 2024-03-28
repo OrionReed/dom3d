@@ -1,3 +1,5 @@
+import { getBrowser } from './browserApi.js';
+
 let enabled = false;
 
 // browser extension state
@@ -5,6 +7,7 @@ let showSides = false;
 let colorSurfaces = true;
 let colorRandom = false;
 let zoomEnabled = true;
+const browser = getBrowser();
 
 // Create context menu items for user preferences
 const options = [
@@ -38,10 +41,10 @@ const options = [
     }];
 
 for (const opt of options) {
-    chrome.contextMenus.create(opt);
+    browser.contextMenus.create(opt);
 }
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
+browser.contextMenus.onClicked.addListener((info, tab) => {
     const optionMappings = {
         "toggle-show-sides": () => showSides = !showSides,
         "toggle-color-surfaces": () => colorSurfaces = !colorSurfaces,
@@ -51,19 +54,19 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
 
     if (optionMappings.hasOwnProperty(info.menuItemId)) {
         const newState = optionMappings[info.menuItemId](); // Toggle the state
-        chrome.contextMenus.update(info.menuItemId, { checked: newState });
+        browser.contextMenus.update(info.menuItemId, { checked: newState });
     }
 });
 
 // Handle enabling/disabling the extension
-chrome.action.onClicked.addListener(async (tab) => {
+browser.action.onClicked.addListener(async (tab) => {
     if (enabled) {
         enabled = false
-        chrome.tabs.reload(tab.id);
+        browser.tabs.reload(tab.id);
         return;
     }
     try {
-        await chrome.scripting.executeScript({
+        await browser.scripting.executeScript({
             target: {
                 tabId: tab.id,
             },
