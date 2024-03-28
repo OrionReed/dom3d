@@ -9,15 +9,15 @@
     "contextMenus"
   ],
   "background": {
-    "service-worker": "background.js"
+    "service_worker": "background.js"
   },
   "content_scripts": [
     {
       "matches": [
         "<all_urls>"
       ],
-      "css": [
-        "assets/style.css"
+      "js": [
+        "background.js"
       ]
     }
   ],
