@@ -12,6 +12,7 @@ You can also save this as a bookmarklet with its default settings, or copy-paste
 <details>
 <summary>Bookmarklet</summary>
 Simply prefix this code with `javascript` and save it as a bookmark on Chrome or Firefox.
+
 ```js
 (()=>{let e=t=>[...t.children].reduce((t,n)=>Math.max(t,e(n)),0)+1,t=e(document.body),n=(e,n=0,o=0)=>`hsl(${n}, 75%, ${Math.min(10+e*(1+60/t),90)+o}%)`,o=document.body;o.style.overflow="visible",o.style.transformStyle="preserve-3d",o.style.perspective=1e4;let r=window.innerWidth/2,i=window.innerHeight/2;o.style.perspectiveOrigin=o.style.transformOrigin=`${r}px ${i}px`,function e(t,o,r,i){for(let l=t.childNodes,s=l.length,d=0;d<s;d++){let s=l[d];if(1!==s.nodeType)continue;let f=n(o,190,-5);Object.assign(s.style,{transform:"translateZ(20px)",overflow:"visible",transformStyle:"preserve-3d",backgroundColor:f});let a=r,c=i;s.offsetParent===t&&(a+=t.offsetLeft,c+=t.offsetTop),e(s,o+1,a,c)}}(o,0,0,0),document.addEventListener("mousemove",e=>{let t=180*(1-e.clientY/window.innerHeight)-90,n=180*e.clientX/window.innerWidth-90;o.style.transform=`rotateX(${t}deg) rotateY(${n}deg)`})})();
 ```
