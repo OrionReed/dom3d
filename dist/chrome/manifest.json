@@ -11,17 +11,6 @@
   "background": {
     "service_worker": "background.js"
   },
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "background.js"
-      ]
-    }
-  ],
-
   "action": {
     "default_icon": {
       "128": "assets/dom3d-128.png"

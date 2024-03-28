@@ -6,11 +6,6 @@ let colorSurfaces = true;
 let colorRandom = false;
 let zoomEnabled = true;
 
-// Set enabled to false when the tab is updated
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.status === 'complete') enabled = false;
-});
-
 // Create context menu items for user preferences
 const options = [
     {
