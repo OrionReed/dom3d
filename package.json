@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "description": "View your DOM in 3D",
   "scripts": {
-    "build-firefox": "rm -r dist/firefox/* && cp -R assets/ dist/firefox/assets/ && cp background.js dist/firefox/background.js && cp manifest-firefox.json dist/firefox/manifest.json",
-    "build-chrome": "rm -r dist/chrome/* && cp -R assets/ dist/chrome/assets/ && cp background.js dist/chrome/background.js && cp manifest-chrome.json dist/chrome/manifest.json",
+    "build-firefox": "rm -r dist/firefox/* && cp -R assets/ dist/firefox/assets/ && cp background.js dist/firefox/background.js && cp browserApiFirefox.js dist/firefox/browserApi.js && cp manifest-firefox.json dist/firefox/manifest.json",
+    "build-chrome": "rm -r dist/chrome/* && cp -R assets/ dist/chrome/assets/ && cp background.js dist/chrome/background.js && cp browserApiChrome.js dist/chrome/browserApi.js && cp manifest-chrome.json dist/chrome/manifest.json",
     "build-safari": "rm -r dist/safari/* && cp -R assets/ dist/chrome/assets/ && cp background.js dist/chrome/background.js && cp manifest-chrome.json dist/safari/manifest.json",
     "build-all": "npm run build-firefox && npm run build-chrome && npm run build-safari"
   },

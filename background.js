@@ -1,3 +1,5 @@
+import { getBrowser } from './browserApi.js';
+
 let enabled = false;
 
 // browser extension state
@@ -5,6 +7,7 @@ let showSides = false;
 let colorSurfaces = true;
 let colorRandom = false;
 let zoomEnabled = true;
+const browser = getBrowser();
 
 // Set enabled to false when the tab is updated
 browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {

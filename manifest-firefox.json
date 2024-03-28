@@ -10,8 +10,10 @@
   ],
   "background": {
     "scripts": [
-      "background.js"
-    ]
+      "background.js",
+      "browserApi.js"
+    ],
+    "type": "module"
   },
   "action": {
     "default_icon": {
