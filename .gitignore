@@ -1,5 +1,5 @@
 *.crx
 *.pem
-node_modules
 *yarn.lock
-dist
+node_modules/
+dist/
