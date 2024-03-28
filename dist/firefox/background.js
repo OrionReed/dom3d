@@ -9,11 +9,6 @@ let colorRandom = false;
 let zoomEnabled = true;
 const browser = getBrowser();
 
-// Set enabled to false when the tab is updated
-browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-    if (changeInfo.status === 'complete') enabled = false;
-});
-
 // Create context menu items for user preferences
 const options = [
     {
