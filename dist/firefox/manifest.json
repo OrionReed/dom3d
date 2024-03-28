@@ -8,15 +8,16 @@
     "scripting",
     "contextMenus"
   ],
+  "action": {
+    "default_icon": {
+      "128": "assets/dom3d-128.png"
+    },
+    "default_title": "DOM3D"
+  },
   "background": {
     "scripts": [
       "background.js"
     ],
     "type": "module"
-  },
-  "action": {
-    "default_icon": {
-      "128": "assets/dom3d-128.png"
-    }
   }
 }
