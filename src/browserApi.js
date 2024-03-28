@@ -1,3 +1,1 @@
-export function getBrowser() {
-    return (typeof browser !== 'undefined') ? browser : chrome;
-}
+export const getBrowser = () => (typeof browser !== 'undefined') ? browser : chrome;
