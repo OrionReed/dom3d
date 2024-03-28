@@ -2,3 +2,4 @@
 *.pem
 node_modules
 *yarn.lock
+dist

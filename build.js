@@ -38,4 +38,4 @@ const combinedManifest = { ...commonManifest, ...browserSpecificManifest };
 const manifestOutputPath = path.join(outputPath, 'manifest.json');
 fs.writeFileSync(manifestOutputPath, JSON.stringify(combinedManifest, null, 2), 'utf8');
 
-console.log(`${browserName} build process completed successfully.`);
+console.log(` Build successful: ${browserName}`);
