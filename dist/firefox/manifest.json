@@ -10,8 +10,7 @@
   ],
   "background": {
     "scripts": [
-      "background.js",
-      "browserApi.js"
+      "background.js"
     ],
     "type": "module"
   },
