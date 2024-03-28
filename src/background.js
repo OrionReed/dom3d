@@ -81,7 +81,13 @@ browser.action.onClicked.addListener(async (tab) => {
 
 // Main function invoked on browser action click
 function dom3d(SHOW_SIDES, COLOR_SURFACE, COLOR_RANDOM, ZOOM_ENABLED) {
-    const COLOR_HUE = 190; // hue in HSL (https://hslpicker.com)
+    const HUE_SELECTORS = [
+        {
+            selector: 'h1',
+            hue: 290
+        }
+    ]
+    const DEFAULT_HUE = 190;
     const MAX_ROTATION = 180; // set to 360 to rotate all the way round
     const THICKNESS = 20; // thickness of layers
     const PERSPECTIVE = 1000; // akin to FOV
@@ -108,7 +114,7 @@ function dom3d(SHOW_SIDES, COLOR_SURFACE, COLOR_RANDOM, ZOOM_ENABLED) {
     traverseDOM(body, 0, 0, 0);
 
     // Rotate the DOM based on mouse movement
-    document.addEventListener("mousemove", (event) => {
+    document.addEventListener("pointermove", (event) => {
         rotationY = (MAX_ROTATION * (1 - event.clientY / window.innerHeight) - (MAX_ROTATION / 2));
         rotationX = (MAX_ROTATION * event.clientX / window.innerWidth - (MAX_ROTATION / 2));
         body.style.transform = getBodyTransform()
@@ -127,26 +133,32 @@ function dom3d(SHOW_SIDES, COLOR_SURFACE, COLOR_RANDOM, ZOOM_ENABLED) {
     // Recursive function to traverse child nodes, apply 3D styles, and create side faces
     function traverseDOM(parentNode, depthLevel, offsetX, offsetY) {
         for (let children = parentNode.childNodes, childrenCount = children.length, i = 0; i < childrenCount; i++) {
-            const childNode = children[i];
-            if (!(1 === childNode.nodeType && !childNode.classList.contains('dom-3d-side-face'))) continue;
-            const color = COLOR_RANDOM ? getRandomColor() : getColorByDepth(depthLevel, COLOR_HUE, -5);
-            Object.assign(childNode.style, {
+            const node = children[i];
+            if (!(1 === node.nodeType && !node.classList.contains('dom-3d-side-face'))) continue;
+
+            // Set the color based on the selector or default hue
+            const hueSelector = HUE_SELECTORS.find(hue => node.matches(hue.selector));
+            const hue = hueSelector ? hueSelector.hue : DEFAULT_HUE;
+            const color = COLOR_RANDOM ? getRandomColor() : getColorByDepth(depthLevel, hue, -5);
+
+            // Apply the styles to the child node
+            Object.assign(node.style, {
                 transform: `translateZ(${THICKNESS}px)`,
                 overflow: "visible",
                 backfaceVisibility: "hidden",
                 transformStyle: "preserve-3d",
-                backgroundColor: COLOR_SURFACE ? color : getComputedStyle(childNode).backgroundColor,
+                backgroundColor: COLOR_SURFACE ? color : getComputedStyle(node).backgroundColor,
                 willChange: 'transform',
             });
 
             let updatedOffsetX = offsetX;
             let updatedOffsetY = offsetY;
-            if (childNode.offsetParent === parentNode) {
+            if (node.offsetParent === parentNode) {
                 updatedOffsetX += parentNode.offsetLeft;
                 updatedOffsetY += parentNode.offsetTop;
             }
-            createSideFaces(childNode, color);
-            traverseDOM(childNode, depthLevel + 1, updatedOffsetX, updatedOffsetY);
+            createSideFaces(node, color);
+            traverseDOM(node, depthLevel + 1, updatedOffsetX, updatedOffsetY);
         }
     }
 
