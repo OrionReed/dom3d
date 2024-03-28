@@ -1,9 +1,9 @@
 name: Build and Release
 
-on:
+on: 
   push:
-    branches:
-      - main
+    tags:
+    - '*'
 
 jobs:
   build:
