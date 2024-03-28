@@ -1,22 +1,8 @@
 {
-  "manifest_version": 3,
-  "name": "DOM3D",
-  "version": "0.1",
-  "description": "View the DOM in 3D.",
-  "permissions": [
-    "activeTab",
-    "scripting",
-    "contextMenus"
-  ],
   "background": {
     "scripts": [
       "background.js"
     ],
     "type": "module"
-  },
-  "action": {
-    "default_icon": {
-      "128": "assets/dom3d-128.png"
-    }
   }
 }
