@@ -42,7 +42,7 @@ const options = [
 	},
 	{
 		id: "toggle-require-drag",
-		title: "Require Drag",
+		title: "Rotate with Alt+Drag",
 		type: "checkbox",
 		checked: requireDragEnabled,
 		contexts: ["action"],

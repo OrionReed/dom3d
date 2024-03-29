@@ -57,7 +57,7 @@ export function dom3d(
 	document.addEventListener(
 		"pointerdown",
 		(event) => {
-			if (!REQUIRE_DRAG) return;
+			if (!REQUIRE_DRAG || !event.altKey) return;
 			state.isDragging = true;
 			state.startX = event.clientX;
 			state.startY = event.clientY;
