@@ -138,6 +138,7 @@ export function dom3d(
 					? color
 					: getComputedStyle(node).backgroundColor,
 				willChange: "transform",
+				isolation: "auto",
 			});
 
 			let updatedOffsetX = offsetX;
