@@ -8,6 +8,7 @@ let colorSurfaces = true;
 let colorRandom = false;
 let zoomEnabled = true;
 let requireDragEnabled = false;
+let selectors = [];
 const browser = getBrowser();
 
 // Create context menu items for user preferences
@@ -47,6 +48,12 @@ const options = [
 		checked: requireDragEnabled,
 		contexts: ["action"],
 	},
+	{
+		id: "selectors",
+		title: "Choose Selectors",
+		type: "normal",
+		contexts: ["action"],
+	},
 ];
 
 for (const opt of options) {
@@ -69,6 +76,48 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 		},
 		"toggle-require-drag": () => {
 			requireDragEnabled = !requireDragEnabled;
+		},
+		selectors: () => {
+			// Inject a script to open a prompt for the user
+			browser.scripting.executeScript({
+				target: { tabId: tab.id },
+				func: (selectors) => {
+					let input = prompt("Selectors", JSON.stringify(selectors));
+					const formatError =
+						"Please enter a valid JSON array with objects containing a 'selector' string and a 'hue' number.";
+					if (input) {
+						try {
+							// Convert JS objects or single-quoted strings to valid JSON
+							input = input
+								.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2":')
+								.replace(/'/g, '"');
+							const parsedInput = JSON.parse(input);
+							if (
+								Array.isArray(parsedInput) &&
+								parsedInput.every(
+									(item) =>
+										typeof item.selector === "string" &&
+										typeof item.hue === "number",
+								)
+							) {
+								(typeof browser !== "undefined"
+									? browser
+									: // @ts-ignore
+										chrome
+								).runtime.sendMessage({
+									updatedSelectors: parsedInput,
+								});
+							} else {
+								throw new Error(`Invalid format. ${formatError}`);
+							}
+						} catch (e) {
+							alert(e);
+							return;
+						}
+					}
+				},
+				args: [selectors],
+			});
 		},
 	};
 
@@ -97,10 +146,18 @@ browser.action.onClicked.addListener(async (tab) => {
 				colorRandom,
 				zoomEnabled,
 				requireDragEnabled,
+				selectors,
 			],
 		});
 		enabled = true;
 	} catch (err) {
 		console.error(`failed to execute script: ${err}`);
+	}
+});
+
+browser.runtime.onMessage.addListener((message, _, sendResponse) => {
+	if (message.updatedSelectors) {
+		selectors = message.updatedSelectors;
+		console.log("Selectors updated:", selectors);
 	}
 });

@@ -5,13 +5,8 @@ export function dom3d(
 	COLOR_RANDOM,
 	ZOOM_ENABLED,
 	REQUIRE_DRAG,
+	SELECTORS,
 ) {
-	const HUE_SELECTORS = [
-		{
-			selector: "h1",
-			hue: 290,
-		},
-	];
 	const DEFAULT_HUE = 190;
 	const MAX_ROTATION = 180; // set to 360 to rotate all the way round
 	const THICKNESS = 20; // thickness of layers
@@ -128,9 +123,7 @@ export function dom3d(
 				continue;
 
 			// Set the color based on the selector or default hue
-			const hueSelector = HUE_SELECTORS.find((hue) =>
-				node.matches(hue.selector),
-			);
+			const hueSelector = SELECTORS.find((hue) => node.matches(hue.selector));
 			const hue = hueSelector ? hueSelector.hue : DEFAULT_HUE;
 			const color = COLOR_RANDOM
 				? getRandomColor()
