@@ -47,7 +47,7 @@ export function dom3d(
 	html.style.background = body.style.background;
 	body.style.overflow = "visible";
 	body.style.transformStyle = "preserve-3d";
-	body.style.perspective = `${PERSPECTIVE}px`;
+	body.style.perspective = `${PERSPECTIVE}`;
 	const perspectiveOriginX = window.innerWidth / 2;
 	const perspectiveOriginY = window.innerHeight / 2;
 	body.style.perspectiveOrigin =
@@ -69,24 +69,31 @@ export function dom3d(
 	);
 
 	document.addEventListener("pointermove", (event) => {
-		if (REQUIRE_DRAG && !state.isDragging) return; // Only rotate if dragging is true
+		if (REQUIRE_DRAG && !state.isDragging) return;
 
-		// Calculate the difference in position
-		const deltaX = event.clientX - state.startX;
-		const deltaY = event.clientY - state.startY;
+		if (REQUIRE_DRAG && state.isDragging) {
+			// Drag-based rotation/orbiting
+			const deltaX = event.clientX - state.startX;
+			const deltaY = event.clientY - state.startY;
 
-		// Apply the difference to the initial rotation values
-		state.rotationX =
-			state.startRotationX + (MAX_ROTATION * deltaX) / window.innerWidth;
-		state.rotationY =
-			state.startRotationY - (MAX_ROTATION * deltaY) / window.innerHeight;
+			state.rotationX =
+				state.startRotationX + (MAX_ROTATION * deltaX) / window.innerWidth;
+			state.rotationY =
+				state.startRotationY - (MAX_ROTATION * deltaY) / window.innerHeight;
+		} else {
+			// Mouse-position-based rotation/orbiting
+			state.rotationY =
+				MAX_ROTATION * (1 - event.clientY / window.innerHeight) -
+				MAX_ROTATION / 2;
+			state.rotationX =
+				(MAX_ROTATION * event.clientX) / window.innerWidth - MAX_ROTATION / 2;
+		}
 
 		// Update the DOM transformation
 		body.style.transform = getBodyTransform();
 	});
 
 	document.addEventListener("pointerup", () => {
-		if (!REQUIRE_DRAG) return;
 		state.isDragging = false;
 	});
 
