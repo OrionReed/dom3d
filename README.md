@@ -1,11 +1,17 @@
 ## dom3d
 
-A 3D DOM viewer for Firefox, Chrome, Microsoft Edge, and Safari
+A 3D DOM viewer for the web.
 
-**NOTE: Only tested in Firefox and Chrome so far. Help with cross-browser support is welcome.**
+**Browser Support**
+- Chrome ✅
+- Firefox ✅
+- Microsoft Edge ✅
+- Opera ✅
+- Brave ✅
+- Safari ❌
 
 ## Install
-Download the latest [release](https://github.com/OrionReed/dom3d/releases) and unzip the file.
+Download the latest [release](https://github.com/OrionReed/dom3d/releases) and unzip the file then follow the instructions for your browser below.
 
 <details>
 <summary><b>Tiny Bookmarklet version</b></summary>
@@ -16,23 +22,34 @@ Simply prefix this code with `javascript:` and save it as a bookmark on Chrome o
 ```
 </details>
 
-**In Firefox**
+<details>
+<summary><b>In Firefox</b></summary>
+
 1. Go to `about:debugging#/runtime/this-firefox`
 2. Click "Load Temporary Addon"
 3. Select `manifest.json` in the downloaded folder
 4. Extension should now be installed, you can find it in the top right extensions menu (puzzle piece icon) and pin it if desired
+</details>
 
-**In Chrome**
+<details>
+<summary><b>In Chrome/Chromium browsers</b></summary>
 1. Go to `chrome://extensions`
-2. Click "Load Unpacked"
-3. Select the downloaded folder
-4. Extension should now be installed, you can find it in the top right extensions menu (puzzle piece icon) and pin it if desired
+2. Enable "Developer Mode" in the top right
+3. Click "Load Unpacked"
+4. Select the downloaded folder
+5. Extension should now be installed, you can find it in the top right extensions menu (puzzle piece icon) and pin it if desired
 
-**In Microsoft Edge**
+**Specific browsers may have additional steps.**
+- In Opera, enable "Allow access to search page results"
+</details>
+
+<details>
+<summary><b>In Microsoft Edge</b></summary>
 1. Go to `edge://extensions`
 2. Click "Load Unpacked"
 3. Select the downloaded folder. Please use the Chrome version of the extension.
 4. Extension should now be installed, you can find it in the top right extensions menu (puzzle piece icon) and pin it if desired
+</details>
 
 ## Usage
 - Click the extension icon to toggle 3D DOM view
