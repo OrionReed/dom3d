@@ -1,6 +1,6 @@
 ## dom3d
 
-A 3D DOM viewer for Firefox, Chrome, and Safari
+A 3D DOM viewer for Firefox, Chrome, Microsoft Edge, and Safari
 
 **NOTE: Only tested in Firefox and Chrome so far. Help with cross-browser support is welcome.**
 
@@ -9,7 +9,7 @@ Download the latest [release](https://github.com/OrionReed/dom3d/releases) and u
 
 <details>
 <summary><b>Tiny Bookmarklet version</b></summary>
-Simply prefix this code with `javascript:` and save it as a bookmark on Chrome or Firefox. This is a 1-1 equivelant to the full extension with the default configuration.
+Simply prefix this code with `javascript:` and save it as a bookmark on Chrome or Firefox. This is a 1-1 equivalent to the full extension with the default configuration.
 
 ```js
 (()=>{let e=t=>[...t.children].reduce((t,n)=>Math.max(t,e(n)),0)+1,t=e(document.body),n=(e,n=0,o=0)=>`hsl(${n}, 75%, ${Math.min(10+e*(1+60/t),90)+o}%)`,o=document.body;o.style.overflow="visible",o.style.transformStyle="preserve-3d",o.style.perspective=1e4;let r=window.innerWidth/2,i=window.innerHeight/2;o.style.perspectiveOrigin=o.style.transformOrigin=`${r}px ${i}px`,function e(t,o,r,i){for(let l=t.childNodes,s=l.length,d=0;d<s;d++){let s=l[d];if(1!==s.nodeType)continue;let f=n(o,190,-5);Object.assign(s.style,{transform:"translateZ(20px)",overflow:"visible",transformStyle:"preserve-3d",backgroundColor:f});let a=r,c=i;s.offsetParent===t&&(a+=t.offsetLeft,c+=t.offsetTop),e(s,o+1,a,c)}}(o,0,0,0),document.addEventListener("mousemove",e=>{let t=180*(1-e.clientY/window.innerHeight)-90,n=180*e.clientX/window.innerWidth-90;o.style.transform=`rotateX(${t}deg) rotateY(${n}deg)`})})();
@@ -26,6 +26,12 @@ Simply prefix this code with `javascript:` and save it as a bookmark on Chrome o
 1. Go to `chrome://extensions`
 2. Click "Load Unpacked"
 3. Select the downloaded folder
+4. Extension should now be installed, you can find it in the top right extensions menu (puzzle piece icon) and pin it if desired
+
+**In Microsoft Edge**
+1. Go to `edge://extensions`
+2. Click "Load Unpacked"
+3. Select the downloaded folder. Please use the Chrome version of the extension.
 4. Extension should now be installed, you can find it in the top right extensions menu (puzzle piece icon) and pin it if desired
 
 ## Usage
