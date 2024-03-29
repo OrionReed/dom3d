@@ -1,3 +1,4 @@
 export function getBrowser() {
-    return (typeof browser !== 'undefined') ? browser : chrome;
+	// @ts-ignore
+	return typeof browser !== "undefined" ? browser : chrome;
 }
