@@ -10,7 +10,7 @@ A 3D DOM viewer for the web.
 - Brave ✅
 - Safari ❌
 
-## Install
+## Installation
 Download the latest [release](https://github.com/OrionReed/dom3d/releases) and unzip the file then follow the instructions for your browser below.
 
 <details>
@@ -36,10 +36,9 @@ Simply prefix this code with `javascript:` and save it as a bookmark on Chrome o
 2. Enable "Developer Mode" in the top right
 3. Click "Load Unpacked"
 4. Select the downloaded folder
-5. Extension should now be installed, you can find it in the top right extensions menu (puzzle piece icon) and pin it if desired
+5. Extension should now be installed, you can find it in the top right extensions menu (puzzle piece icon) and pin it if desired  
 
-
-**Specific browsers may have additional steps.**
+**Specific Chromium browsers may have additional steps.**
 - In Opera, enable "Allow access to search page results"
 </details>
 
@@ -52,9 +51,7 @@ Simply prefix this code with `javascript:` and save it as a bookmark on Chrome o
 </details>
 
 ## Usage
-- Click the extension icon to toggle 3D DOM view
-- Right-Click for options
-
+Click the extension icon to toggle 3D DOM view or right-click for options.
 
 | Option                | Description                                            |
 |-----------------------|--------------------------------------------------------|
