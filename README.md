@@ -63,7 +63,7 @@ Click the extension icon to toggle 3D DOM view or right-click for options.
 
 ## Development
 1. Run `yarn install`
-2. Run `yarn watch` to watch for changes and automatically rebuild the extension, or one of the `build:{browser}` scripts to build a specific browser.
+2. Run `yarn watch` to watch for changes and automatically rebuild the extension.
 3. Load the extension from `dist/{browser}` following the steps above.
 
 You can use [web-ext](https://github.com/mozilla/web-ext) to reload the extension in Firefox automatically. Chrome requires a manual reload from the `chrome://extensions` page.
