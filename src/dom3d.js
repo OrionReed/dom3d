@@ -110,17 +110,14 @@ export function dom3d(
 	// Recursive function to traverse child nodes, apply 3D styles, and create side faces
 	function traverseDOM(parentNode, depthLevel, offsetX, offsetY) {
 		for (
-			let children = parentNode.childNodes,
+			let children = parentNode.children,
 				childrenCount = children.length,
 				i = 0;
 			i < childrenCount;
 			i++
 		) {
 			const node = children[i];
-			if (
-				!(1 === node.nodeType && !node.classList.contains("dom-3d-side-face"))
-			)
-				continue;
+			if (node.classList.contains("dom-3d-side-face")) continue;
 
 			// Set the color based on the selector or default hue
 			const hueSelector = SELECTORS.find((hue) => node.matches(hue.selector));
