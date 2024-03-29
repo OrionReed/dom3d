@@ -130,6 +130,7 @@ export function dom3d(
 			Object.assign(node.style, {
 				transform: `translateZ(${THICKNESS}px)`,
 				overflow: "visible",
+				visibility: "visible",
 				transformStyle: "preserve-3d",
 				backgroundColor: COLOR_SURFACE
 					? color
