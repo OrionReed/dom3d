@@ -24,7 +24,6 @@ Simply prefix this code with `javascript:` and save it as a bookmark on Chrome o
 
 <details>
 <summary><b>In Firefox</b></summary>
-
 1. Go to `about:debugging#/runtime/this-firefox`
 2. Click "Load Temporary Addon"
 3. Select `manifest.json` in the downloaded folder
@@ -38,6 +37,7 @@ Simply prefix this code with `javascript:` and save it as a bookmark on Chrome o
 3. Click "Load Unpacked"
 4. Select the downloaded folder
 5. Extension should now be installed, you can find it in the top right extensions menu (puzzle piece icon) and pin it if desired
+
 
 **Specific browsers may have additional steps.**
 - In Opera, enable "Allow access to search page results"
@@ -53,7 +53,17 @@ Simply prefix this code with `javascript:` and save it as a bookmark on Chrome o
 
 ## Usage
 - Click the extension icon to toggle 3D DOM view
-- Right-Click for options like showing sides, surfaces, randomising color, and enabling zoom.
+- Right-Click for options
+
+
+| Option                | Description                                            |
+|-----------------------|--------------------------------------------------------|
+| Show Sides            | Toggle visibility of element sides                     |
+| Show Surfaces         | Toggle visibility of element surfaces                  |
+| Randomize Color       | Apply random colors to elements                        |
+| Enable Zoom           | Enable zoom functionality                              |
+| Rotate with Alt+Drag  | Rotate view only when dragging and Alt key is pressed  |
+| Choose Selectors      | Select specific elements to apply effects              |
 
 ## Development
 1. Run `yarn install`
