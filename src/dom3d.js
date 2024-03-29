@@ -69,7 +69,7 @@ export function dom3d(
 	);
 
 	document.addEventListener("pointermove", (event) => {
-		if (!state.isDragging) return; // Only rotate if dragging is true
+		if (REQUIRE_DRAG && !state.isDragging) return; // Only rotate if dragging is true
 
 		// Calculate the difference in position
 		const deltaX = event.clientX - state.startX;
