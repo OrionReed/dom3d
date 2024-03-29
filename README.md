@@ -1,20 +1,19 @@
-## dom3d
-
-A 3D DOM viewer for the web.
-
-**Browser Support**
-- Chrome ✅
-- Firefox ✅
-- Microsoft Edge ✅
-- Opera ✅
-- Brave ✅
-- Safari ❌
+<div align="center">
+  <img width="60" height="60" src="https://github.com/OrionReed/dom3d/assets/16704290/126a738c-1a22-43ac-a209-b465afe73b17"/>
+  <h3 style="margin-top: 0;">dom3d: a spatial DOM view for the web.</h3>
+  <img src="https://img.shields.io/badge/Chrome-Supported-brightgreen">
+  <img src="https://img.shields.io/badge/Firefox-Supported-brightgreen">
+  <img src="https://img.shields.io/badge/Microsoft%20Edge-Supported-brightgreen">
+  <img src="https://img.shields.io/badge/Opera-Supported-brightgreen">
+  <img src="https://img.shields.io/badge/Brave-Supported-brightgreen">
+  <img src="https://img.shields.io/badge/Safari-Unsupported-red">
+</div> 
 
 ## Installation
 Download the latest [release](https://github.com/OrionReed/dom3d/releases) and unzip the file then follow the instructions for your browser below.
 
 <details>
-<summary><b>Tiny Bookmarklet version</b></summary>
+<summary><b>Universal bookmarklet version</b></summary>
 Simply prefix this code with `javascript:` and save it as a bookmark on Chrome or Firefox. This is a 1-1 equivalent to the full extension with the default configuration.
 
 ```js
