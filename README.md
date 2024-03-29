@@ -1,6 +1,6 @@
 <div align="center">
   <img width="60" height="60" src="https://github.com/OrionReed/dom3d/assets/16704290/126a738c-1a22-43ac-a209-b465afe73b17"/>
-  <h3 style="margin-top: 0;">dom3d: a spatial DOM view for the web.</h3>
+  <h3 style="margin-top: 0;">dom3d: a tiny spatial DOM view for the web.</h3>
   <img src="https://img.shields.io/badge/Chrome-Supported-brightgreen">
   <img src="https://img.shields.io/badge/Firefox-Supported-brightgreen">
   <img src="https://img.shields.io/badge/Microsoft%20Edge-Supported-brightgreen">
