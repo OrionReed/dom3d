@@ -41,6 +41,6 @@ You can use [web-ext](https://github.com/mozilla/web-ext) to reload the extensio
 
 ## Known Issues
 All help in diagnosing and fixing these key issues is welcome! I've linked to an Issue for each of them.
-- The z-ordering of DOM elements from the 'cameras' perspective is incorrect in some cases. 
-- Some websites (like GitHub) appear flat when their DOM clearly isn't.
-- Some elements don't increase stack height, such as `<a>` and `<i>` tags.
+- [The z-ordering of DOM elements from the 'cameras' perspective is incorrect in some cases.](https://github.com/OrionReed/dom3d/issues/9)
+- [Some websites (like GitHub) appear flat when their DOM clearly isn't.](https://github.com/OrionReed/dom3d/issues/10)
+- [Some elements don't increase stack height, such as `<a>` and `<i>` tags.](https://github.com/OrionReed/dom3d/issues/11)
