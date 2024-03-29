@@ -11,6 +11,7 @@
   },
   "license": "GPL-3.0",
   "devDependencies": {
+    "@biomejs/biome": "1.6.3",
     "fs-extra": "^11.2.0",
     "nodemon": "^3.1.0"
   }
