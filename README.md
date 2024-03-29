@@ -38,3 +38,9 @@ Simply prefix this code with `javascript:` and save it as a bookmark on Chrome o
 3. Load the extension from `dist/{browser}` following the steps above.
 
 You can use [web-ext](https://github.com/mozilla/web-ext) to reload the extension in Firefox automatically. Chrome requires a manual reload from the `chrome://extensions` page.
+
+## Known Issues
+All help in diagnosing and fixing these key issues is welcome! I've linked to an Issue for each of them.
+- The z-ordering of DOM elements from the 'cameras' perspective is incorrect in some cases. 
+- Some websites (like GitHub) appear flat when their DOM clearly isn't.
+- Some elements don't increase stack height, such as `<a>` and `<i>` tags.

@@ -101,7 +101,7 @@ export function dom3d(
 			state.zoomLevel = Math.max(
 				0.1,
 				Math.min(state.zoomLevel + event.deltaY * 0.001, 2),
-			); // Example: min 500, max 20000
+			);
 			body.style.transform = getBodyTransform();
 		},
 		{ passive: false },
