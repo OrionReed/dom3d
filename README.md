@@ -59,7 +59,7 @@ Click the extension icon to toggle 3D DOM view or right-click for options.
 | Randomize Color       | Apply random colors to elements                        |
 | Enable Zoom           | Enable zoom functionality                              |
 | Rotate with Alt+Drag  | Rotate view only when dragging and Alt key is pressed  |
-| Choose Selectors      | Select specific elements to apply effects              |
+| Choose Selectors      | Set CSS selectors to selectively color elements        |
 
 ## Development
 1. Run `yarn install`
