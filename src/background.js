@@ -155,9 +155,8 @@ browser.action.onClicked.addListener(async (tab) => {
 	}
 });
 
-browser.runtime.onMessage.addListener((message, _, sendResponse) => {
+browser.runtime.onMessage.addListener((message, _, __) => {
 	if (message.updatedSelectors) {
 		selectors = message.updatedSelectors;
-		console.log("Selectors updated:", selectors);
 	}
 });
