@@ -1,6 +1,5 @@
 import { getBrowser } from "./browserApi.js";
 import { dom3d } from "./dom3d.js";
-let enabled = false;
 
 // browser extension state
 let showSides = false;
@@ -129,11 +128,6 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 
 // Handle enabling/disabling the extension
 browser.action.onClicked.addListener(async (tab) => {
-	if (enabled) {
-		enabled = false;
-		browser.tabs.reload(tab.id);
-		return;
-	}
 	try {
 		await browser.scripting.executeScript({
 			target: {
@@ -149,7 +143,6 @@ browser.action.onClicked.addListener(async (tab) => {
 				selectors,
 			],
 		});
-		enabled = true;
 	} catch (err) {
 		console.error(`failed to execute script: ${err}`);
 	}

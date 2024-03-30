@@ -7,6 +7,10 @@ export function dom3d(
 	REQUIRE_DRAG,
 	SELECTORS,
 ) {
+	const body = document.body;
+	if (body.classList.contains("dom3d-enabled")) return;
+	body.classList.add("dom3d-enabled");
+
 	const DEFAULT_HUE = 190;
 	const MAX_ROTATION = 180; // set to 360 to rotate all the way round
 	const THICKNESS = 20; // thickness of layers
@@ -22,105 +26,24 @@ export function dom3d(
 		startRotationX: 0,
 		startRotationY: 0,
 	};
-
-	const getBodyTransform = () =>
-		`rotateX(${state.rotationY}deg) rotateY(${state.rotationX}deg) scale(${state.zoomLevel})`;
-	const getDOMDepth = (element) =>
-		[...element.children].reduce(
-			(max, child) => Math.max(max, getDOMDepth(child)),
-			0,
-		) + 1;
 	const domDepthCache = getDOMDepth(document.body);
-	const getColorByDepth = (depth, hue = 0, lighten = 0) =>
-		`hsl(${hue}, 75%, ${
-			Math.min(10 + depth * (1 + 60 / domDepthCache), 90) + lighten
-		}%)`;
 
 	// Apply initial styles to the body to enable 3D perspective
-	const body = document.body;
-	const html = document.documentElement;
-	html.style.background = body.style.background;
-	body.style.overflow = "visible";
-	body.style.transformStyle = "preserve-3d";
-	body.style.perspective = `${PERSPECTIVE}`;
-	const perspectiveOriginX = window.innerWidth / 2;
-	const perspectiveOriginY = window.innerHeight / 2;
-	body.style.perspectiveOrigin =
-		body.style.transformOrigin = `${perspectiveOriginX}px ${perspectiveOriginY}px`;
-	traverseDOM(body, 0, 0, 0);
-
-	document.addEventListener(
-		"pointerdown",
-		(event) => {
-			if (!REQUIRE_DRAG || !event.altKey) return;
-			state.isDragging = true;
-			state.startX = event.clientX;
-			state.startY = event.clientY;
-			state.startRotationX = state.rotationX;
-			state.startRotationY = state.rotationY;
-			event.preventDefault(); // Prevent default actions like text selection
-		},
-		{ passive: false },
-	);
-
-	document.addEventListener("pointermove", (event) => {
-		if (REQUIRE_DRAG && !state.isDragging) return;
-
-		if (REQUIRE_DRAG && state.isDragging) {
-			// Drag-based rotation/orbiting
-			const deltaX = event.clientX - state.startX;
-			const deltaY = event.clientY - state.startY;
-
-			state.rotationX =
-				state.startRotationX + (MAX_ROTATION * deltaX) / window.innerWidth;
-			state.rotationY =
-				state.startRotationY - (MAX_ROTATION * deltaY) / window.innerHeight;
-		} else {
-			// Mouse-position-based rotation/orbiting
-			state.rotationY =
-				MAX_ROTATION * (1 - event.clientY / window.innerHeight) -
-				MAX_ROTATION / 2;
-			state.rotationX =
-				(MAX_ROTATION * event.clientX) / window.innerWidth - MAX_ROTATION / 2;
-		}
-
-		// Update the DOM transformation
-		body.style.transform = getBodyTransform();
-	});
-
-	document.addEventListener("pointerup", () => {
-		state.isDragging = false;
-	});
-
-	// Zoom in/out based on mouse wheel if enabled
-	document.addEventListener(
-		"wheel",
-		(event) => {
-			if (!ZOOM_ENABLED) return;
-			event.preventDefault();
-			state.zoomLevel = Math.max(
-				0.1,
-				Math.min(state.zoomLevel + event.deltaY * 0.001, 2),
-			);
-			body.style.transform = getBodyTransform();
-		},
-		{ passive: false },
-	);
+	applyBaseBodyStyles();
+	addEventListeners();
+	traverseDOM(document.body, 0, 0, 0);
 
 	// Recursive function to traverse child nodes, apply 3D styles, and create side faces
 	function traverseDOM(parentNode, depthLevel, offsetX, offsetY) {
 		for (
-			let children = parentNode.childNodes,
+			let children = parentNode.children,
 				childrenCount = children.length,
 				i = 0;
 			i < childrenCount;
 			i++
 		) {
 			const node = children[i];
-			if (
-				!(1 === node.nodeType && !node.classList.contains("dom-3d-side-face"))
-			)
-				continue;
+			if (node.classList.contains("dom3d-side-face")) continue;
 
 			// Set the color based on the selector or default hue
 			const hueSelector = SELECTORS.find((hue) => node.matches(hue.selector));
@@ -152,15 +75,6 @@ export function dom3d(
 		}
 	}
 
-	//! UTILS —————————————————————————————————————————————————————
-
-	function getRandomColor() {
-		const hue = Math.floor(Math.random() * 360);
-		const saturation = 40 + Math.floor(Math.random() * 30);
-		const lightness = 30 + Math.floor(Math.random() * 30);
-		return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-	}
-
 	// Create side faces for an element to give it a 3D appearance
 	function createSideFaces(element, color) {
 		if (!SHOW_SIDES) return;
@@ -180,7 +94,7 @@ export function dom3d(
 			bottom = "",
 		}) => {
 			const face = document.createElement("div");
-			face.className = "dom-3d-side-face";
+			face.className = "dom3d-side-face";
 			Object.assign(face.style, {
 				transformStyle: "preserve-3d",
 				backfaceVisibility: "hidden",
@@ -240,5 +154,101 @@ export function dom3d(
 		});
 
 		element.appendChild(fragment);
+	}
+
+	// UTILS —————————————————————————————————————————————————————
+
+	function getRandomColor() {
+		const hue = Math.floor(Math.random() * 360);
+		const saturation = 40 + Math.floor(Math.random() * 30);
+		const lightness = 30 + Math.floor(Math.random() * 30);
+		return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+	}
+
+	function getBodyTransform() {
+		return `rotateX(${state.rotationY}deg) rotateY(${state.rotationX}deg) scale(${state.zoomLevel})`;
+	}
+	function getDOMDepth(element) {
+		return (
+			[...element.children].reduce(
+				(max, child) => Math.max(max, getDOMDepth(child)),
+				0,
+			) + 1
+		);
+	}
+	function getColorByDepth(depth, hue = 0, lighten = 0) {
+		return `hsl(${hue}, 75%, ${
+			Math.min(10 + depth * (1 + 60 / domDepthCache), 90) + lighten
+		}%)`;
+	}
+
+	function applyBaseBodyStyles() {
+		const html = document.documentElement;
+		const perspectiveOriginX = window.innerWidth / 2;
+		const perspectiveOriginY = window.innerHeight / 2;
+		html.style.background = body.style.background;
+		body.style.overflow = "visible";
+		body.style.transformStyle = "preserve-3d";
+		body.style.perspective = `${PERSPECTIVE}`;
+		body.style.perspectiveOrigin =
+			body.style.transformOrigin = `${perspectiveOriginX}px ${perspectiveOriginY}px`;
+	}
+
+	// EVENT LISTENERS ——————————————————————————————————————————
+
+	function handlePointerDown(event) {
+		if (!REQUIRE_DRAG || !event.altKey) return;
+		state.isDragging = true;
+		state.startX = event.clientX;
+		state.startY = event.clientY;
+		state.startRotationX = state.rotationX;
+		state.startRotationY = state.rotationY;
+		event.preventDefault(); // Prevent default actions like text selection
+	}
+
+	function handleWheel(event) {
+		if (!ZOOM_ENABLED) return;
+		event.preventDefault();
+		state.zoomLevel = Math.max(
+			0.1,
+			Math.min(state.zoomLevel + event.deltaY * 0.001, 2),
+		);
+		body.style.transform = getBodyTransform();
+	}
+
+	function handlePointerMove(event) {
+		if (REQUIRE_DRAG && !state.isDragging) return;
+
+		if (REQUIRE_DRAG && state.isDragging) {
+			// Drag-based rotation/orbiting
+			const deltaX = event.clientX - state.startX;
+			const deltaY = event.clientY - state.startY;
+
+			state.rotationX =
+				state.startRotationX + (MAX_ROTATION * deltaX) / window.innerWidth;
+			state.rotationY =
+				state.startRotationY - (MAX_ROTATION * deltaY) / window.innerHeight;
+		} else {
+			// Mouse-position-based rotation/orbiting
+			state.rotationY =
+				MAX_ROTATION * (1 - event.clientY / window.innerHeight) -
+				MAX_ROTATION / 2;
+			state.rotationX =
+				(MAX_ROTATION * event.clientX) / window.innerWidth - MAX_ROTATION / 2;
+		}
+
+		// Update the DOM transformation
+		body.style.transform = getBodyTransform();
+	}
+
+	function addEventListeners() {
+		document.addEventListener("pointermove", handlePointerMove);
+		document.addEventListener("wheel", handleWheel, { passive: false });
+		document.addEventListener("pointerup", () => {
+			state.isDragging = false;
+		});
+		document.addEventListener("pointerdown", handlePointerDown, {
+			passive: false,
+		});
 	}
 }
