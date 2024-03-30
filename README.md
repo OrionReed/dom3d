@@ -50,7 +50,7 @@ Simply prefix this code with `javascript:` and save it as a bookmark on Chrome o
 </details>
 
 ## Usage
-Click the extension icon to toggle 3D DOM view or right-click for options.
+Click the extension icon to enable 3D DOM view or right-click it for options.
 
 | Option                | Description                                            |
 |-----------------------|--------------------------------------------------------|
