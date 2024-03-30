@@ -40,7 +40,7 @@ export function dom3d(
 			i++
 		) {
 			const node = children[i];
-			if (node.classList.contains("dom-3d-side-face")) continue;
+			if (node.classList.contains("dom3d-side-face")) continue;
 
 			// Set the color based on the selector or default hue
 			const hueSelector = SELECTORS.find((hue) => node.matches(hue.selector));
@@ -53,11 +53,6 @@ export function dom3d(
 			Object.assign(node.style, {
 				transform: `translateZ(${THICKNESS}px)`,
 				overflow: "visible",
-				// TODO: see if we can be selective with visibility,
-				// this might have a heavy performance impact
-				visibility: "visible",
-				// display: "inline-block",
-				// node.style.display === "inline" ? "inline-block" : node.style.display,
 				transformStyle: "preserve-3d",
 				backgroundColor: COLOR_SURFACE
 					? color
@@ -75,44 +70,6 @@ export function dom3d(
 			createSideFaces(node, color);
 			traverseDOM(node, depthLevel + 1, updatedOffsetX, updatedOffsetY);
 		}
-	}
-
-	//! UTILS —————————————————————————————————————————————————————
-
-	function getRandomColor() {
-		const hue = Math.floor(Math.random() * 360);
-		const saturation = 40 + Math.floor(Math.random() * 30);
-		const lightness = 30 + Math.floor(Math.random() * 30);
-		return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-	}
-
-	function getBodyTransform() {
-		return `rotateX(${state.rotationY}deg) rotateY(${state.rotationX}deg) scale(${state.zoomLevel})`;
-	}
-	function getDOMDepth(element) {
-		return (
-			[...element.children].reduce(
-				(max, child) => Math.max(max, getDOMDepth(child)),
-				0,
-			) + 1
-		);
-	}
-	function getColorByDepth(depth, hue = 0, lighten = 0) {
-		return `hsl(${hue}, 75%, ${
-			Math.min(10 + depth * (1 + 60 / domDepthCache), 90) + lighten
-		}%)`;
-	}
-
-	function applyBaseBodyStyles() {
-		const html = document.documentElement;
-		const perspectiveOriginX = window.innerWidth / 2;
-		const perspectiveOriginY = window.innerHeight / 2;
-		html.style.background = body.style.background;
-		body.style.overflow = "visible";
-		body.style.transformStyle = "preserve-3d";
-		body.style.perspective = `${PERSPECTIVE}`;
-		body.style.perspectiveOrigin =
-			body.style.transformOrigin = `${perspectiveOriginX}px ${perspectiveOriginY}px`;
 	}
 
 	// Create side faces for an element to give it a 3D appearance
@@ -134,7 +91,7 @@ export function dom3d(
 			bottom = "",
 		}) => {
 			const face = document.createElement("div");
-			face.className = "dom-3d-side-face";
+			face.className = "dom3d-side-face";
 			Object.assign(face.style, {
 				transformStyle: "preserve-3d",
 				backfaceVisibility: "hidden",
@@ -195,6 +152,46 @@ export function dom3d(
 
 		element.appendChild(fragment);
 	}
+
+	// UTILS —————————————————————————————————————————————————————
+
+	function getRandomColor() {
+		const hue = Math.floor(Math.random() * 360);
+		const saturation = 40 + Math.floor(Math.random() * 30);
+		const lightness = 30 + Math.floor(Math.random() * 30);
+		return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+	}
+
+	function getBodyTransform() {
+		return `rotateX(${state.rotationY}deg) rotateY(${state.rotationX}deg) scale(${state.zoomLevel})`;
+	}
+	function getDOMDepth(element) {
+		return (
+			[...element.children].reduce(
+				(max, child) => Math.max(max, getDOMDepth(child)),
+				0,
+			) + 1
+		);
+	}
+	function getColorByDepth(depth, hue = 0, lighten = 0) {
+		return `hsl(${hue}, 75%, ${
+			Math.min(10 + depth * (1 + 60 / domDepthCache), 90) + lighten
+		}%)`;
+	}
+
+	function applyBaseBodyStyles() {
+		const html = document.documentElement;
+		const perspectiveOriginX = window.innerWidth / 2;
+		const perspectiveOriginY = window.innerHeight / 2;
+		html.style.background = body.style.background;
+		body.style.overflow = "visible";
+		body.style.transformStyle = "preserve-3d";
+		body.style.perspective = `${PERSPECTIVE}`;
+		body.style.perspectiveOrigin =
+			body.style.transformOrigin = `${perspectiveOriginX}px ${perspectiveOriginY}px`;
+	}
+
+	// EVENT LISTENERS ——————————————————————————————————————————
 
 	function handlePointerDown(event) {
 		if (!REQUIRE_DRAG || !event.altKey) return;
