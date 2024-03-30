@@ -7,6 +7,10 @@ export function dom3d(
 	REQUIRE_DRAG,
 	SELECTORS,
 ) {
+	const body = document.body;
+	if (body.classList.contains("dom3d-enabled")) return;
+	body.classList.add("dom3d-enabled");
+
 	const DEFAULT_HUE = 190;
 	const MAX_ROTATION = 180; // set to 360 to rotate all the way round
 	const THICKNESS = 20; // thickness of layers
@@ -23,7 +27,6 @@ export function dom3d(
 		startRotationY: 0,
 	};
 	const domDepthCache = getDOMDepth(document.body);
-	const body = document.body;
 
 	// Apply initial styles to the body to enable 3D perspective
 	applyBaseBodyStyles();
