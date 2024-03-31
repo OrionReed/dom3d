@@ -61,7 +61,7 @@ Click the extension icon to enable 3D DOM view or right-click it for options.
 | Show Sides            | Toggle visibility of element sides                     |
 | Show Surfaces         | Toggle visibility of element surfaces                  |
 | Randomize Color       | Apply random colors to elements                        |
-| Enable Zoom           | Enable zoom functionality                              |
+| Enable Zoom           | Scale the DOM with scroll wheel                        |
 | Rotate with Alt+Drag  | Rotate view only when dragging and Alt key is pressed  |
 | Choose Selectors      | Set CSS selectors to selectively color elements        |
 
