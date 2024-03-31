@@ -2,11 +2,12 @@
   "name": "dom3d",
   "author": "Orion Reed",
   "description": "View your DOM in 3D",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "scripts": {
     "build:firefox": "node build.js firefox",
     "build:chrome": "node build.js chrome",
-    "build": "yarn build:firefox && yarn build:chrome",
+    "build:safari": "node build.js safari",
+    "build": "yarn build:firefox && yarn build:chrome && yarn build:safari",
     "watch": "nodemon --ignore 'dist/*' --watch 'src/**/*' --watch 'manifest-*.json' --watch 'manifest.json' --exec 'yarn build'"
   },
   "license": "GPL-3.0",
