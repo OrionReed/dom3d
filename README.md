@@ -9,7 +9,10 @@
   <img src="https://img.shields.io/badge/Safari-Unsupported-red">
 </div> 
 
-## Installation
+
+### Installation
+Note: You can install this extension from the [Firefox extension store](https://addons.mozilla.org/en-US/firefox/addon/dom3d/) and it will soon be available from the Chrome store.
+
 Download the latest [release](https://github.com/OrionReed/dom3d/releases) and unzip the file then follow the instructions for your browser below.
 
 <details>
@@ -65,8 +68,6 @@ Click the extension icon to enable 3D DOM view or right-click it for options.
 1. Run `yarn install`
 2. Run `yarn watch` to watch for changes and automatically rebuild the extension.
 3. Load the extension from `dist/{browser}` following the steps above.
-
-You can use [web-ext](https://github.com/mozilla/web-ext) to reload the extension in Firefox automatically. Chrome requires a manual reload from the `chrome://extensions` page.
 
 ## Known Issues
 All help in diagnosing and fixing these key issues is welcome! I've linked to an Issue for each of them.
