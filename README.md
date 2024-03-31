@@ -11,7 +11,7 @@
 
 
 ### Installation
-Note: You can install this extension from the [Firefox extension store](https://addons.mozilla.org/en-US/firefox/addon/dom3d/) and it will soon be available from the Chrome store.
+>Note: You can install this extension from the [Firefox extension store](https://addons.mozilla.org/en-US/firefox/addon/dom3d/) and it will soon be available from the Chrome store.
 
 Download the latest [release](https://github.com/OrionReed/dom3d/releases) and unzip the file then follow the instructions for your browser below.
 
