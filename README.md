@@ -26,6 +26,7 @@ Simply prefix this code with `javascript:` and save it as a bookmark on Chrome o
 
 <details>
 <summary><b>In Firefox</b></summary>
+
 1. Go to `about:debugging#/runtime/this-firefox`
 2. Click "Load Temporary Addon"
 3. Select `manifest.json` in the downloaded folder
@@ -34,6 +35,7 @@ Simply prefix this code with `javascript:` and save it as a bookmark on Chrome o
 
 <details>
 <summary><b>In Chrome/Chromium browsers</b></summary>
+
 1. Go to `chrome://extensions`
 2. Enable "Developer Mode" in the top right
 3. Click "Load Unpacked"
@@ -46,6 +48,7 @@ Simply prefix this code with `javascript:` and save it as a bookmark on Chrome o
 
 <details>
 <summary><b>In Microsoft Edge</b></summary>
+
 1. Go to `edge://extensions`
 2. Click "Load Unpacked"
 3. Select the downloaded folder. Please use the Chrome version of the extension.
