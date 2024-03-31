@@ -69,6 +69,8 @@ Click the extension icon to enable 3D DOM view or right-click it for options.
 2. Run `yarn watch` to watch for changes and automatically rebuild the extension.
 3. Load the extension from `dist/{browser}` following the steps above.
 
+For Safari, you can run `xcrun safari-web-extension-converter dist/safari` and try to go from there. No success so far.
+
 ## Known Issues
 All help in diagnosing and fixing these key issues is welcome! I've linked to an Issue for each of them.
 - [The z-ordering of DOM elements from the 'cameras' perspective is incorrect in some cases.](https://github.com/OrionReed/dom3d/issues/9)
