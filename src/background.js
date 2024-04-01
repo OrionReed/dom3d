@@ -5,7 +5,6 @@ import { dom3d } from "./dom3d.js";
 let colorSurfaces = true;
 let showSides = false;
 let colorRandom = false;
-let zoomEnabled = true;
 let requireDrag = true;
 let requireAlt = false;
 let CssSelectors = [];
@@ -25,13 +24,6 @@ const options = [
 		title: "Show Sides",
 		type: "checkbox",
 		checked: showSides,
-		contexts: ["action"],
-	},
-	{
-		id: "toggle-zoom",
-		title: "Scale with Scroll",
-		type: "checkbox",
-		checked: zoomEnabled,
 		contexts: ["action"],
 	},
 	{
@@ -77,9 +69,6 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 		},
 		"toggle-color-random": () => {
 			colorRandom = !colorRandom;
-		},
-		"toggle-zoom": () => {
-			zoomEnabled = !zoomEnabled;
 		},
 		"toggle-require-drag": () => {
 			requireDrag = !requireDrag;
@@ -149,7 +138,6 @@ browser.action.onClicked.addListener(async (tab) => {
 				showSides,
 				colorSurfaces,
 				colorRandom,
-				zoomEnabled,
 				requireDrag,
 				requireAlt,
 				CssSelectors,

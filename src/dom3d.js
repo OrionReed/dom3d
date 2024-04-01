@@ -3,7 +3,6 @@ export function dom3d(
 	SHOW_SIDES,
 	COLOR_SURFACE,
 	COLOR_RANDOM,
-	ZOOM_ENABLED,
 	REQUIRE_DRAG,
 	REQUIRE_ALT,
 	SELECTORS,
@@ -208,7 +207,6 @@ export function dom3d(
 	}
 
 	function handleWheel(event) {
-		if (!ZOOM_ENABLED) return;
 		event.preventDefault();
 		state.zoomLevel = Math.max(
 			0.1,
