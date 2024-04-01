@@ -5,6 +5,7 @@ export function dom3d(
 	COLOR_RANDOM,
 	ZOOM_ENABLED,
 	REQUIRE_DRAG,
+	REQUIRE_ALT,
 	SELECTORS,
 ) {
 	const body = document.body;
@@ -197,7 +198,7 @@ export function dom3d(
 	// EVENT LISTENERS ——————————————————————————————————————————
 
 	function handlePointerDown(event) {
-		if (!REQUIRE_DRAG || !event.altKey) return;
+		if (REQUIRE_ALT && !event.altKey) return;
 		state.isDragging = true;
 		state.startX = event.clientX;
 		state.startY = event.clientY;
@@ -218,8 +219,9 @@ export function dom3d(
 
 	function handlePointerMove(event) {
 		if (REQUIRE_DRAG && !state.isDragging) return;
+		if (REQUIRE_ALT && !event.altKey) return;
 
-		if (REQUIRE_DRAG && state.isDragging) {
+		if (REQUIRE_DRAG) {
 			// Drag-based rotation/orbiting
 			const deltaX = event.clientX - state.startX;
 			const deltaY = event.clientY - state.startY;
@@ -229,7 +231,6 @@ export function dom3d(
 			state.rotationY =
 				state.startRotationY - (MAX_ROTATION * deltaY) / window.innerHeight;
 		} else {
-			// Mouse-position-based rotation/orbiting
 			state.rotationY =
 				MAX_ROTATION * (1 - event.clientY / window.innerHeight) -
 				MAX_ROTATION / 2;
