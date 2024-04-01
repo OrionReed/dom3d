@@ -2,7 +2,7 @@
   "name": "dom3d",
   "author": "Orion Reed",
   "description": "View your DOM in 3D",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "scripts": {
     "build:firefox": "node build.js firefox",
     "build:chrome": "node build.js chrome",

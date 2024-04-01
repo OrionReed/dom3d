@@ -2,16 +2,23 @@ import { getBrowser } from "./browserApi.js";
 import { dom3d } from "./dom3d.js";
 
 // browser extension state
-let showSides = false;
 let colorSurfaces = true;
+let showSides = false;
 let colorRandom = false;
-let zoomEnabled = true;
-let requireDragEnabled = false;
-let selectors = [];
+let requireDrag = true;
+let requireAlt = false;
+let CssSelectors = [];
 const browser = getBrowser();
 
 // Create context menu items for user preferences
 const options = [
+	{
+		id: "toggle-color-surfaces",
+		title: "Show Surfaces",
+		type: "checkbox",
+		checked: colorSurfaces,
+		contexts: ["action"],
+	},
 	{
 		id: "toggle-show-sides",
 		title: "Show Sides",
@@ -20,10 +27,17 @@ const options = [
 		contexts: ["action"],
 	},
 	{
-		id: "toggle-color-surfaces",
-		title: "Show Surfaces",
+		id: "toggle-require-drag",
+		title: "Require Drag",
 		type: "checkbox",
-		checked: colorSurfaces,
+		checked: requireDrag,
+		contexts: ["action"],
+	},
+	{
+		id: "toggle-require-alt",
+		title: "Require Alt Key",
+		type: "checkbox",
+		checked: requireAlt,
 		contexts: ["action"],
 	},
 	{
@@ -34,22 +48,8 @@ const options = [
 		contexts: ["action"],
 	},
 	{
-		id: "toggle-zoom",
-		title: "Enable Zoom",
-		type: "checkbox",
-		checked: zoomEnabled,
-		contexts: ["action"],
-	},
-	{
-		id: "toggle-require-drag",
-		title: "Rotate with Alt+Drag",
-		type: "checkbox",
-		checked: requireDragEnabled,
-		contexts: ["action"],
-	},
-	{
 		id: "selectors",
-		title: "Choose Selectors",
+		title: "CSS Selectors",
 		type: "normal",
 		contexts: ["action"],
 	},
@@ -70,11 +70,11 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 		"toggle-color-random": () => {
 			colorRandom = !colorRandom;
 		},
-		"toggle-zoom": () => {
-			zoomEnabled = !zoomEnabled;
-		},
 		"toggle-require-drag": () => {
-			requireDragEnabled = !requireDragEnabled;
+			requireDrag = !requireDrag;
+		},
+		"toggle-require-alt": () => {
+			requireAlt = !requireAlt;
 		},
 		selectors: () => {
 			// Inject a script to open a prompt for the user
@@ -115,7 +115,7 @@ browser.contextMenus.onClicked.addListener((info, tab) => {
 						}
 					}
 				},
-				args: [selectors],
+				args: [CssSelectors],
 			});
 		},
 	};
@@ -138,9 +138,9 @@ browser.action.onClicked.addListener(async (tab) => {
 				showSides,
 				colorSurfaces,
 				colorRandom,
-				zoomEnabled,
-				requireDragEnabled,
-				selectors,
+				requireDrag,
+				requireAlt,
+				CssSelectors,
 			],
 		});
 	} catch (err) {
@@ -150,6 +150,6 @@ browser.action.onClicked.addListener(async (tab) => {
 
 browser.runtime.onMessage.addListener((message, _, __) => {
 	if (message.updatedSelectors) {
-		selectors = message.updatedSelectors;
+		CssSelectors = message.updatedSelectors;
 	}
 });

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "dom3d",
-  "version": "0.0.3",
-  "description": "View the DOM in 3D.",
+  "version": "0.0.4",
+  "description": "View and debug a website's DOM in 3D space.",
   "permissions": [
     "activeTab",
     "scripting",
