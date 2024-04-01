@@ -58,12 +58,12 @@ Click the extension icon to enable 3D DOM view or right-click it for options.
 
 | Option                | Description                                            |
 |-----------------------|--------------------------------------------------------|
-| Show Sides            | Toggle visibility of element sides                     |
 | Show Surfaces         | Toggle visibility of element surfaces                  |
+| Show Sides            | Toggle visibility of element sides                     |
+| Require Drag          | Only rotate when dragging                              |
+| Require Alt           | Only rotate when Alt key is pressed                    |
 | Randomize Color       | Apply random colors to elements                        |
-| Enable Zoom           | Scale the DOM with scroll wheel                        |
-| Rotate with Alt+Drag  | Rotate view only when dragging and Alt key is pressed  |
-| Choose Selectors      | Set CSS selectors to selectively color elements        |
+| CSS Selectors         | Set CSS selectors to selectively color elements        |
 
 ## Development
 1. Run `yarn install`
