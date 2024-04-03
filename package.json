@@ -8,7 +8,7 @@
     "build:chrome": "node build.js chrome",
     "build:safari": "node build.js safari",
     "build": "yarn build:firefox && yarn build:chrome && yarn build:safari",
-    "watch": "nodemon --ignore 'dist/*' --watch 'src/**/*' --watch 'manifest-*.json' --watch 'manifest.json' --exec 'yarn build'"
+    "watch": "nodemon --ignore 'dist/*' --watch 'src/**/*' --watch 'manifest-*.json' --watch 'manifest.json' --exec \"yarn build\""
   },
   "license": "GPL-3.0",
   "devDependencies": {
